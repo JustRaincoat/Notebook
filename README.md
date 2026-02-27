@@ -70,6 +70,8 @@ It is recommended to use a HTML reader.
     - **update v1.2.1 on Feb 27th,2026**
         - 更新了一道树链剖分的例题。
 
+9. **update v1.3.0 on Feb 27th,2026**
+    - 增加了html的动画效果（仅部分有，若该文件没有，会在最后一次更新后，自动添加）。
 
 ## Menu 目录
 

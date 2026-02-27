@@ -41,11 +41,464 @@
 }
 
       </style>
-      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
-  document.addEventListener("DOMContentLoaded", function () {
-    // your code here
+      <!--
+MIT License
+
+Copyright (c) 2025 LazyIrpn
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+--><style>
+/* ---------- 通用变量（可按需改） ---------- */
+:root{
+  --splash-bg: linear-gradient(135deg,#0f1724,#071226);
+  --accent: #00aaff;
+  --accent2: #00ffcc;
+  --text-weak: rgba(255,255,255,0.85);
+  --signature-color: rgba(0,0,0,0.35);
+}
+
+/* ---------- 开屏遮罩（splash） ---------- */
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--splash-bg);
+  color: var(--text-weak);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "LXGW WenKai", "Helvetica Neue", Arial, sans-serif;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+#splash-screen.hide {
+  opacity: 0;
+  transform: scale(0.995);
+  pointer-events: none;
+}
+#splash-inner {
+  text-align: center;
+  transform: translateY(0);
+}
+#splash-title {
+  font-size: 2.0rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: white;
+}
+#splash-sub {
+  margin-top: .5rem;
+  color: rgba(255,255,255,0.78);
+  font-size: 0.95rem;
+}
+#splash-loader {
+  margin-top: 1.6rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 4px solid rgba(255,255,255,0.12);
+  border-top-color: rgba(255,255,255,0.9);
+  animation: spspin 1s linear infinite;
+}
+@keyframes spspin { to { transform: rotate(360deg); } }
+
+/* 可选的 “跳过” 按钮（左下角） */
+#splash-skip {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 100000;
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  background: rgba(0,0,0,0.18);
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .18s;
+}
+#splash-skip:hover { background: rgba(0,0,0,0.28); }
+
+/* ---------- 阅读进度条（顶部） ---------- */
+#read-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  z-index: 99998;
+  transition: width 0.12s linear;
+  pointer-events: none;
+}
+
+/* ---------- 署名水印（右下） ---------- */
+#page-signature {
+  position: fixed;
+  right: 16px;
+  bottom: 12px;
+  font-size: 12px;
+  color: var(--signature-color);
+  pointer-events: none;
+  user-select: none;
+  z-index: 99997;
+  background: transparent;
+  padding: 6px 8px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+/* 打印/导出时隐藏这些 UI */
+@media print {
+  #splash-screen, #read-progress, #page-signature, #splash-skip { display: none !important; }
+}
+</style>
+
+<script>
+/*
+  集成脚本：
+  - 在 DOMContentLoaded 时挂载三个元素：splash、progress、signature
+  - splash: 在 window 'load' 时淡出；若 load 未在 5s 内触发，5s 后自动淡出（以免卡住）
+  - splash 可通过左下角 "Skip" 立即关闭
+  - 本脚本默认 24 小时内只显示一次开屏（localStorage 控制），如需每次都显示可移除相关代码
+*/
+
+/* -------- 可配置项（修改这里） -------- */
+const CONFIG = {
+  blogTitle: 'LazyIrpn/Notebook',    // 页面/站点名，显示在开屏
+  author: '__raincoat__[irpn@foxmail.com]',        // 显示在署名与开屏副标题
+  splashShownIntervalDays: 0,    // 0：每次都展示；>0：在 localStorage 指定天数内只显示一次
+  splashMinVisibleMs: 800,       // splash 最短显示时间（避免闪烁）
+  splashMaxWaitMs: 5000          // 若 load 未触发，最多等待时间后自动结束 splash
+};
+
+/* -------- 工具：是否近期显示过 splash？ -------- */
+function _splashRecentlyShown() {
+  try {
+    if (!CONFIG.splashShownIntervalDays) return false;
+    const key = 'mpe_splash_last_shown';
+    const v = localStorage.getItem(key);
+    if (!v) return false;
+    const t = parseInt(v, 10);
+    if (isNaN(t)) return false;
+    const days = CONFIG.splashShownIntervalDays;
+    return (Date.now() - t) < days * 24 * 3600 * 1000;
+  } catch (e) {
+    return false;
+  }
+}
+function _markSplashShown() {
+  try {
+    const key = 'mpe_splash_last_shown';
+    localStorage.setItem(key, String(Date.now()));
+  } catch (e) {}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // ---------- 1) 进度条 ----------
+  const prog = document.createElement('div');
+  prog.id = 'read-progress';
+  document.body.appendChild(prog);
+
+  const updateProgress = () => {
+    const doc = document.documentElement;
+    const scrollTop = doc.scrollTop || document.body.scrollTop || 0;
+    const height = doc.scrollHeight - doc.clientHeight;
+    const pct = height > 0 ? (scrollTop / height) * 100 : 0;
+    prog.style.width = Math.max(0, Math.min(100, pct)) + '%';
+  };
+  // initial + scroll/resize listeners
+  updateProgress();
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+
+  // ---------- 2) 页脚署名 ----------
+  const sign = document.createElement('div');
+  sign.id = 'page-signature';
+  sign.textContent = `© ${CONFIG.author}`;
+  document.body.appendChild(sign);
+
+  // ---------- 3) 开屏动画（可选按 localStorage 控制是否显示） ----------
+  const shouldShow = !_splashRecentlyShown();
+  if (!shouldShow) return; // 若命中不显示，则跳过挂载 splash（仍保留 progress/sign）
+
+  const splash = document.createElement('div');
+  splash.id = 'splash-screen';
+  splash.setAttribute('role','dialog');
+  splash.setAttribute('aria-hidden','false');
+  splash.innerHTML = `
+    <div id="splash-inner" aria-hidden="false">
+      <div id="splash-title">${CONFIG.blogTitle}</div>
+      <div id="splash-sub">By ${CONFIG.author}</div>
+      <div id="splash-loader" aria-hidden="true"></div>
+    </div>
+  `;
+  document.body.appendChild(splash);
+
+  // 跳过按钮（可选）
+  const skip = document.createElement('div');
+  skip.id = 'splash-skip';
+  skip.textContent = 'Skip';
+  skip.title = 'Skip splash';
+  document.body.appendChild(skip);
+
+  // hide splash function (确保只执行一次)
+  let splashHidden = false;
+  const hideSplash = (instant=false) => {
+    if (splashHidden) return;
+    splashHidden = true;
+    try {
+      splash.setAttribute('aria-hidden','true');
+      if (instant) {
+        splash.remove();
+        skip.remove();
+      } else {
+        splash.classList.add('hide');
+        // 等动画结束再移除
+        setTimeout(() => { try { splash.remove(); skip.remove(); } catch(e) {} }, 700);
+      }
+      _markSplashShown();
+    } catch (e) {}
+  };
+
+  // 最短显示与延迟保护
+  const startedAt = Date.now();
+  // 当 window load 触发，尽量保证最少显示时长后隐藏
+  const finishAfterMin = () => {
+    const elapsed = Date.now() - startedAt;
+    const remain = Math.max(0, CONFIG.splashMinVisibleMs - elapsed);
+    setTimeout(() => hideSplash(false), remain);
+  };
+
+  // 如果页面完全 load：
+  window.addEventListener('load', () => {
+    finishAfterMin();
+  }, {once:true});
+
+  // 如果 load 很慢，最多等 splashMaxWaitMs
+  setTimeout(() => {
+    finishAfterMin();
+  }, CONFIG.splashMaxWaitMs);
+
+  // 点击跳过立即隐藏
+  skip.addEventListener('click', () => hideSplash(false));
+
+  // 按 ESC 隐藏（无障碍）
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') hideSplash(false);
   });
-</script></head><body for="html-export">
+
+  // 若页面很小或 JS 报错，5s 后确保移除
+  setTimeout(() => { hideSplash(false); }, CONFIG.splashMaxWaitMs + 1200);
+});
+</script>
+<!-- ===== End of head 插件 ===== -->
+
+
+ <!-- ===== 自动右侧目录（TOC） ===== -->
+
+
+<style>
+/* ================== TOC 基础样式 ================== */
+#auto-toc {
+  position: fixed;
+  top: 100px;
+  right: 16px;
+  width: 240px;
+  max-height: calc(100vh - 160px);
+  font-size: 13px;
+  line-height: 1.55;
+  z-index: 99996;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: background .2s, color .2s;
+}
+
+/* 头部（可点击折叠） */
+#auto-toc-header {
+  cursor: pointer;
+  padding: 10px 12px;
+  font-weight: 600;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#auto-toc-arrow {
+  transition: transform .2s;
+}
+
+#auto-toc.collapsed #auto-toc-arrow {
+  transform: rotate(-90deg);
+}
+
+/* 内容区 */
+#auto-toc-body {
+  padding: 6px 10px 10px 10px;
+  max-height: calc(100vh - 210px);
+  overflow-y: auto;
+}
+
+#auto-toc.collapsed #auto-toc-body {
+  display: none;
+}
+
+/* 列表 */
+#auto-toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#auto-toc li {
+  margin: 3px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 层级缩进 */
+#auto-toc li.level-2 { padding-left: 0; }
+#auto-toc li.level-3 { padding-left: 12px; }
+#auto-toc li.level-4 { padding-left: 24px; }
+
+/* 链接 */
+#auto-toc a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 当前章节 */
+#auto-toc a.active {
+  font-weight: 600;
+}
+
+/* ================== 亮色模式 ================== */
+@media (prefers-color-scheme: light) {
+  #auto-toc {
+    background: rgba(255,255,255,0.88);
+    color: #333;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  }
+  #auto-toc a { color: #555; }
+  #auto-toc a.active { color: #007acc; }
+}
+
+/* ================== 暗色模式 ================== */
+@media (prefers-color-scheme: dark) {
+  #auto-toc {
+    background: rgba(24,24,28,0.88);
+    color: #ddd;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+  }
+  #auto-toc a { color: #aaa; }
+  #auto-toc a.active { color: #4fc3ff; }
+}
+
+/* ================== 打印隐藏 ================== */
+@media print {
+  #auto-toc {
+    display: none !important;
+  }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const headings = Array.from(
+    document.body.querySelectorAll("h1, h2, h3, h4")
+  );
+  if (headings.length < 2) return;
+
+  /* 创建容器 */
+  const toc = document.createElement("nav");
+  toc.id = "auto-toc";
+
+  /* 头部（折叠） */
+  const header = document.createElement("div");
+  header.id = "auto-toc-header";
+  header.innerHTML = `<span>目录</span><span id="auto-toc-arrow">▾</span>`;
+  toc.appendChild(header);
+
+  /* 内容 */
+  const body = document.createElement("div");
+  body.id = "auto-toc-body";
+  const ul = document.createElement("ul");
+  body.appendChild(ul);
+  toc.appendChild(body);
+
+  /* 生成目录项 */
+  headings.forEach((h, i) => {
+    if (!h.id) h.id = "toc-h-" + i;
+    const level = Number(h.tagName[1]);
+
+    const li = document.createElement("li");
+    li.className = "level-" + level;
+
+    const a = document.createElement("a");
+    a.textContent = h.textContent;
+    a.href = "#" + h.id;
+
+    a.addEventListener("click", e => {
+      e.preventDefault();
+      document.getElementById(h.id).scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+      history.pushState(null, "", "#" + h.id);
+    });
+
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  document.body.appendChild(toc);
+
+  /* 折叠逻辑 */
+  header.addEventListener("click", () => {
+    toc.classList.toggle("collapsed");
+  });
+
+  /* 当前章节高亮 */
+  const links = toc.querySelectorAll("a");
+
+  const updateActive = () => {
+    let current = null;
+    for (const h of headings) {
+      if (h.getBoundingClientRect().top <= 120) {
+        current = h;
+      } else break;
+    }
+    links.forEach(a => a.classList.remove("active"));
+    if (current) {
+      const active = toc.querySelector(`a[href="#${current.id}"]`);
+      if (active) active.classList.add("active");
+    }
+  };
+
+  window.addEventListener("scroll", updateActive, { passive: true });
+  updateActive();
+});
+</script>
+<!-- ===== TOC End ===== --></head><body for="html-export">
     
     
       <div class="crossnote markdown-preview  ">
