@@ -3,7 +3,7 @@ export_on_save:
   html: true
 ---
 
-# 线段树（朴素）
+# 线段树
 
 ## 问题
 
@@ -17,7 +17,7 @@ export_on_save:
 
 对于一个二元运算 $\oplus$，它必须满足结合律：$(a \oplus b) \oplus c = a \oplus (b \oplus c)$
 
-只有满足结合律的运算，我们才能将一个大区间 $ [L, R]$ 的信息，通过将其分割成两个（或多个）子区间 $[L, M]$ 和 $[M+1, R]$，然后合并这两个子区间的结果 $info_{left} \oplus info_{right}$ 来高效地计算得到。线段树节点存储的就是其对应区间的运算结果。
+只有满足结合律的运算，我们才能将一个大区间 $[L,R]$ 的信息，通过将其分割成两个（或多个）子区间 $[L,M]$ 和 $[M+1,R]$，然后合并这两个子区间的结果 $Info_{left} \oplus Info_{right}$ 来高效地计算得到。线段树节点存储的就是其对应区间的运算结果。
 
 ### 常见的可以被线段树维护的运算 / 信息
 
@@ -90,10 +90,7 @@ export_on_save:
       - 模意义下的乘法或加法。
       - 结构体（如记录最大连续子段和、区间总和、前缀最大和、后缀最大和等信息，通过定义 **合适的合并规则** 来维护区间最大连续子段和）。
 
-
 ## 思路
-
-~~非常直观，不做赘述~~
 
 每个节点表示原数组的一个区间。
 
@@ -182,9 +179,9 @@ struct Node {
 
 关于节点的创建与储存：
 
-不使用 **传统的** $4$ 倍空间存储法，在空间上能省则省。
+不使用 **传统的存储** $4$ 倍空间，在空间上能省则省。
 
-不使用 **容易坏且内存开销巨大** 的 ***vector*** 存储。
+不使用 **内存开销巨大且迭代器扩容后损坏** 的 ***vector*** 存储。
 
 朴素而简单的 堆+数组 ，把空间复杂度降到 $O(n)$ 。
 
@@ -357,9 +354,9 @@ signed main() {
 }
 ```
 
-# 线段树（动态开点）
+## 指针优化 - 动态开点
 
-## 写在前面
+### 写在前面
 
 首先要了解动态开点线段树的使用情景
 
@@ -372,7 +369,7 @@ signed main() {
 
 因为上述的板子很方便了，只需要稍作修改即可
 
-## 新增
+### 新增
 
 ```cpp   
 int create(Rge rg){
@@ -382,7 +379,7 @@ int create(Rge rg){
 }
 ```
 
-## 修改
+### 修改
 
 1. 新增检查和新建节点的模块
 
@@ -408,7 +405,50 @@ void pushdown(int k){
 2. [**Code**](/Code/Luogu_P_13825_模板_线段树_1_5.cpp)
     使用指针优化写法。在保留原有代码的极高扩展性的情况下使代码时空效率更高。
 
-# 应用
+## 泛型优化 - 基于 Lambda 表达式的一树多用
+
+在线段树的题目中，我们常常遇见维护信息多，修改操作复杂的问题。如果对每个操作单独写一个函数，代码会变得冗长且难以维护。基于 Lambda 表达式的一树多用的思想，可以让我们在保持线段树核心结构不变的情况下，通过传入不同的 Lambda 表达式来实现不同的修改和查询操作，从而大大提高代码的复用性和可维护性。
+
+```cpp
+void modify(Node* u,const std::function<void(Node*)> &factor){
+    if(u->rg <= inrg){
+        factor(u);
+        return;
+    }
+    u->pushdown();
+    if(inrg.l <= u->rg.mid)modify(u->ls,factor);
+    if(inrg.r > u->rg.mid)modify(u->rs,factor);
+    u->pushup();
+}
+template<typename T>
+T query(Node* u,const std::function<T(Node*)> &base,const std::function<T(T,T)> &merge){
+    if(u->rg <= inrg)return base(u);
+    u->pushdown();
+    if(inrg.r <= u->rg.mid)return query(u->ls,base,merge);
+    if(inrg.l>=u->rg.mid+1)return query(u->rs,base,merge);
+    return merge(query(u->ls,base,merge),query(u->rs,base,merge));
+}
+```
+
+这样就能使多个操作共用同一套代码和逻辑，在使用时：
+
+```cpp
+Tree.sgt.modify(
+    Tree.sgt.root,
+    [](SGT::Node* u){u->upsum(1);}//对应修改的操作（以区间加1为例）
+);
+```
+```cpp
+Tree.sgt.query<int>(//较为复杂时直接返回存储对应信息的结构体，如最大连续子段和等
+    Tree.sgt.root,
+    [](SGT::Node* u){return u->sum.num;},//base情况，返回单个节点的查询值
+    [](int a,int b){return a+b;}//处理左右节点的合并，可以参考pushup的逻辑
+);
+```
+
+~~写树剖写的~~
+
+## 应用
 
 !!! tip 踩坑记录
     1. 记得判断输入区间是否合法，若没有声明 `l<r`，则默认进行交换操作。

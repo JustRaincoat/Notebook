@@ -35,7 +35,7 @@ export_on_save:
 - 动态维护与在线询问：与线段树/树状数组结合，能在线处理大量修改与查询；也可与分治、并查集等技术混用解决复杂问题。
 - 竞赛题常见模式：树上区间/路径问题（例如树上 k 最近点、路径上第 k 大、树链上带约束的二分/分块处理等）。
 
-## 示例说明（简短）
+## 示例说明
 
 - 要求在树上回答若干次 "将 `u` 到 `v` 路径上的所有点加上 x" 与 "询问 `u` 到 `v` 路径上所有点的和"，使用 HLD：把树映射为基数组，路径操作拆为若干区间操作并在区间上调用线段树的区间加/区间求和。
 - 要求对子树内所有节点进行更新并查询子树和：直接将子树对应的 dfn 区间作为线段树的区间操作。
@@ -202,3 +202,58 @@ void Add(int _u, int _v, int w, HLDT &t) {
     这样转换点权之后，两个节点的 $LCA$ 的点权需要排除。因为 $LCA$ 的点权其实是 $LCA$ 与其父节点的边的边权，并不在 $u \rightarrow v$ 的路径上。
 
 [**参考代码**](/Code/Luogu_P_4315_月下_毛景树.cpp)
+
+
+### [P3976 [TJOI2015] 旅游](https://www.luogu.com.cn/problem/P3976)
+
+容易发现，本题亦要求在路径上进行操作，适合使用 HLD 解决。
+
+不难发现题目需要实现一个**路径加**操作和一个**路径查询最大值**操作。
+
+值得注意的是，此最大值非彼最大值，因为此处是有向路径（也就是说，u->v 和 v->u 是不同的路径，需要分别处理），结合实际意义可知，ZJY必须先在以个城市买，再去到另一个城市卖，我们要求的是这两个城市前者的价格与后者的价格的差值的最大值。
+
+- **重难突破1:线段树维护**:
+    实际上我们要求的是**最大的逆序差**，即（在dfn维度上）：
+    $$\Delta_{\max} = \max_{\exist \text{Path:} u \rightarrow v}(w_u - w_v)$$
+    如果不考虑逆序，$\Delta_{\max} = \max - \min$，由此可以想到需要维护一个**区间最大值**和一个**区间最小值**。
+
+    接下来考虑逆序，对于一个区间，**从左向右**（即 `dfn` 从小到大 $\Lrarr$ 在重链上**从上往下**走），和**从右向左**走（即 `dfn` 从大到小 $\Lrarr$ 在重链上**从下往上**走），需要分别维护从两个方向走的收益。
+
+    那么这个信息该如何维护呢？信息合并是维护的关键，成败再此一举。
+    
+    首先考虑**基于已有信息**进行信息合并。
+
+    - **区间最大值**：$\max(\text{左区间最大值},\text{右区间最大值})$
+    - **区间最小值**：$\min(\text{左区间最小值},\text{右区间最小值})$
+    - ***从左向右*走的最大收益**：$\max(\text{左区间从左向右走的最大收益},\text{右区间从左向右走的最大收益},\text{左区间最大值} - \text{右区间最小值})$
+    - ***从右向左*走的最大收益**：$\max(\text{左区间从右向左走的最大收益},\text{右区间从右向左走的最大收益},\text{右区间最大值} - \text{左区间最小值})$
+
+- **重难突破2:跳链查询**
+    这里比较复杂，建议直接看代码，相关代码如下：
+
+    ```cpp
+    for(;u->top != LCA->top;u = u->top->fa){
+        Tree.sgt.inrg = SGT::Rge(u->dfn,u->top->dfn);
+        std::tie(a,b,c,d) = Tree.sgt.query(Tree.sgt.root,merge);
+        Lmsg = merge(Lmsg,msg{a,b,d,c});//上行方向，u->LCA，dfn从小到大，需要翻转
+    }
+    Tree.sgt.inrg = SGT::Rge(u->dfn,LCA->dfn);
+    std::tie(a,b,c,d) = Tree.sgt.query(Tree.sgt.root,merge);
+    Lmsg = merge(Lmsg,msg{a,b,d,c});//上行方向，u->LCA，dfn从小到大，需要翻转
+
+    for(;v->top != LCA->top;v = v->top->fa){
+        Tree.sgt.inrg = SGT::Rge(v->dfn,v->top->dfn);
+        std::tie(a,b,c,d) = Tree.sgt.query(Tree.sgt.root,merge);
+        Rmsg = merge(msg{a,b,c,d},Rmsg);//下行方向，LCA->v，dfn从小到大，无需翻转
+    }
+    Tree.sgt.inrg = SGT::Rge(v->dfn,LCA->dfn);
+    std::tie(a,b,c,d) = Tree.sgt.query(Tree.sgt.root,merge);
+    Rmsg = merge(msg{a,b,c,d},Rmsg);//下行方向，LCA->v，dfn从小到大，无需翻转
+    ```
+
+    由题意可得，要先进行区间加，再进行区间查询，所以在跳链过程中，先进行区间加操作，再进行区间查询操作。$LCA$ 可以在区间加的时候顺便求出。
+
+    !!! Attention
+        在进行区间查询时，**上行方向**（即 u->LCA）需要翻转（因为 dfn 从小到大是从上往下走的），而**下行方向**（即 LCA->v）无需翻转（因为 dfn 从小到大也是从上往下走的）。因此在合并信息时，上行方向需要翻转 msg 的 a、b、c、d 的位置，而下行方向则不需要。
+
+[**参考代码**](/Code/Luogu_P_3976_TJOI_2015_旅游.cpp)

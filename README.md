@@ -67,6 +67,9 @@ It is recommended to use a HTML reader.
 8. **update v1.2.0 on Feb 11th,2026**
     - 不再提供 PDF 版本。
     - 在目录中添加了树链剖分的部分。
+    - **update v1.2.1 on Feb 27th,2026**
+        - 更新了一道树链剖分的例题。
+
 
 ## Menu 目录
 
