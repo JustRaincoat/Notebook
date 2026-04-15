@@ -54,7 +54,7 @@ It is recommended to use a HTML reader.
 
 5. **update v1.1.0 on Jan 21th,2026**
     - 更新了所有的链接。
-    - 切换主要阅读模式至网页阅读。
+    - **切换主要阅读模式至网页阅读**。
     - 生成了所有 `Markdown` 的 `HTML` 内容。
 
 6. **update v1.1.1 on Jan 23th,2026**
@@ -72,6 +72,11 @@ It is recommended to use a HTML reader.
 
 9. **update v1.3.0 on Feb 27th,2026**
     - 增加了html的动画效果（仅部分有，若该文件没有，会在最后一次更新后，自动添加）。
+
+10. **update v1.3.1 on April 15th,2026**
+    - 时隔两个月的再次更新。这两个月间，完成了dp专项的学习，然而并没有写到Blog里面
+    - 更新了一篇刷题笔记
+    - 发布Github Page页面
 
 ## Menu 目录
 

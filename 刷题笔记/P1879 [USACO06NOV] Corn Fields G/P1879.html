@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head>
-      <title>README</title>
+      <title>P1879</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
@@ -141,79 +141,6 @@
   padding: 6px 8px;
   border-radius: 6px;
   backdrop-filter: blur(4px);
-}
-
-#auto-toc {
-  position: fixed;
-  top: 80px;
-  right: 24px;
-  width: 260px;
-  max-height: calc(100vh - 120px);
-  overflow: auto;
-  z-index: 99996;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  padding: 10px 12px;
-  font-size: 14px;
-  backdrop-filter: blur(8px);
-}
-
-#auto-toc-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  font-weight: 700;
-  margin-bottom: 8px;
-  user-select: none;
-}
-
-#auto-toc-body ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-#auto-toc-body li {
-  margin: 4px 0;
-  line-height: 1.4;
-}
-
-#auto-toc-body a {
-  text-decoration: none;
-  color: #444;
-  display: block;
-  padding: 2px 4px;
-  border-radius: 6px;
-}
-
-#auto-toc-body a:hover {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-#auto-toc-body a.active {
-  font-weight: 700;
-  color: #0a66ff;
-}
-
-#auto-toc.collapsed #auto-toc-body {
-  display: none;
-}
-
-/* 文章主体给右侧目录留空 */
-body[for="html-export"] .markdown-preview {
-  padding-right: 320px;
-}
-
-@media (max-width: 1200px) {
-  #auto-toc {
-    display: none;
-  }
-  body[for="html-export"] .markdown-preview {
-    padding-right: 2em;
-  }
 }
 
 /* 打印/导出时隐藏这些 UI */
@@ -359,7 +286,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // 若页面很小或 JS 报错，5s 后确保移除
   setTimeout(() => { hideSplash(false); }, CONFIG.splashMaxWaitMs + 1200);
 });
+</script>
+<!-- ===== End of head 插件 ===== -->
 
+
+ <!-- ===== 自动右侧目录（TOC） ===== -->
+
+
+<script>
 /* ========= 仅浏览器生效（VS Code Preview 中禁用） ========= */
 function isVSCodePreview() {
   return typeof acquireVsCodeApi === "function";
@@ -443,335 +377,25 @@ if (!isVSCodePreview()) {
   });
 }
 </script>
+
 <!-- ===== TOC End ===== -->
     </head>
     <body for="html-export">
       <div class="crossnote markdown-preview  ">
       
-<h1 id="readme-使用指南">README 使用指南 </h1>
-<h2 id="profile-简介">Profile 简介 </h2>
-<p>如果你打开了这份文件，恭喜你，你已经知道这个文件夹是干什么的啦！</p>
-<p>Just a notebook.</p>
-<h2 id="tip-提醒">Tip 提醒 </h2>
+<h1 id="p1879-usaco06nov-corn-fields-ghttpswwwluogucomcnproblemp1879"><a href="https://www.luogu.com.cn/problem/P1879">P1879 [USACO06NOV] Corn Fields G</a> </h1>
 <div class="admonition success">
-<p class="admonition-title">已修复</p>
-<p>所有失效链接已修复，推荐使用浏览器打开 HTML！</p>
+<p class="admonition-title">经典状压dp。</p>
 </div>
-<p>推荐：使用 HTML 阅读器打开。</p>
-<p>最低限度：文本阅读器查看 <code>Markdown</code> 文本内容</p>
-<p>It is recommended to use a HTML reader.</p>
-<h2 id="update-log-更新日志">Update Log 更新日志 </h2>
-<p><strong>Github Commit - Explain</strong></p>
-<ol>
-<li>
-<p><strong>update v1.0.1 on Jan 12th,2026</strong></p>
-<ul>
-<li>update <code>README.md</code> 结束 <code>README.md</code> 目录施工。</li>
-<li>update <code>P10049.md</code> 结束 <code>P10049.md</code> 内容撰写与 HTML 发布。</li>
-<li>update <code>PrimeFactorization.md</code> 结束 <code>PrimeFactorization.md</code> 内容撰写与 HTML 发布。</li>
-<li>update <code>BitOperator.md</code> 挖坑待填。</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.0.2 on Jan 14th,2026</strong></p>
-<ul>
-<li>update <code>IndeterminateEquation.md</code> 挖坑待填。</li>
-<li>update <code>Inverse.md</code> 施工中。</li>
-<li>update <code>PrimeFactorization.md</code> 施工完毕。</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.0.3 on Jan 16th,2026</strong></p>
-<ul>
-<li>更新平衡树相关内容，持续施工中。</li>
-<li>创建 <code>/gnu_cxx/</code> 用于记录实用的非 STL 函数。</li>
-<li>更新 <code>README.md</code> 的部分说明。</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.0.4 on Jan 20th,2026</strong></p>
-<ul>
-<li>更新 <code>rope</code> 相关内容。</li>
-<li><strong>update v1.0.4.1 on Jan 20th,2026</strong>
-<ul>
-<li>修复了部分文件的命名规范</li>
-<li>完善了 <code>README.md</code> 中目录和更新的内容</li>
-</ul>
-</li>
-<li><strong>update v1.0.4.2 on Jan 20th,2026</strong>
-<ul>
-<li>紧急修复了<code>README.md</code> 中部分链接错误</li>
-</ul>
-</li>
-<li><strong>update v1.0.4.3 on Jan 20th,2026</strong>
-<ul>
-<li>修缮了 <code>README.md</code> 部分文字说明。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.1.0 on Jan 21th,2026</strong></p>
-<ul>
-<li>更新了所有的链接。</li>
-<li><strong>切换主要阅读模式至网页阅读</strong>。</li>
-<li>生成了所有 <code>Markdown</code> 的 <code>HTML</code> 内容。</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.1.1 on Jan 23th,2026</strong></p>
-<ul>
-<li>修复了<code>措(cuo)鳖(bie)子(zi)</code>。</li>
-<li>更新了线段树的代码。</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.1.2 on Feb 11th,2026</strong></p>
-<ul>
-<li>完成了树链剖分（重链剖分）的部分，包括文字说明和例题代码。</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.2.0 on Feb 11th,2026</strong></p>
-<ul>
-<li>不再提供 PDF 版本。</li>
-<li>在目录中添加了树链剖分的部分。</li>
-<li><strong>update v1.2.1 on Feb 27th,2026</strong>
-<ul>
-<li>更新了一道树链剖分的例题。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.3.0 on Feb 27th,2026</strong></p>
-<ul>
-<li>增加了html的动画效果（仅部分有，若该文件没有，会在最后一次更新后，自动添加）。</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.3.1 on April 15th,2026</strong></p>
-<ul>
-<li>时隔两个月的再次更新。这两个月间，完成了dp专项的学习，然而并没有写到Blog里面</li>
-<li>更新了一篇刷题笔记</li>
-<li>发布Github Page页面</li>
-</ul>
-</li>
-</ol>
-<h2 id="menu-目录">Menu 目录 </h2>
-<p>在这里找到你想要的一切！</p>
-<p>Looking for everything you want in this folder!</p>
-<ul>
-<li>
-<p><a href="./STL/">STL模板库</a></p>
-<ol>
-<li><a href="./STL/STL.md">Markdown</a></li>
-<li><a href="./STL/STL.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E5%9B%BE%E8%AE%BA/">Graph Theory图论</a></p>
-<ul>
-<li>
-<p><a href="./%E5%9B%BE%E8%AE%BA/ShortestPath/">Shortest Path Algorithm 最短路算法</a></p>
-<ol>
-<li><a href="./%E5%9B%BE%E8%AE%BA/ShortestPath/ShortestPath.md">Markdown</a></li>
-<li><a href="./%E5%9B%BE%E8%AE%BA/ShortestPath/ShortestPath.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E5%9B%BE%E8%AE%BA/DiffConstraints/">DiffConstraints 差分约束——最短路应用</a></p>
-<ol>
-<li><a href="./%E5%9B%BE%E8%AE%BA/DiffConstraints/DC.md">Markdown</a></li>
-<li><a href="./%E5%9B%BE%E8%AE%BA/DiffConstraints/DC.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E5%9B%BE%E8%AE%BA/Connectivity/">Connectivity 连通性问题</a></p>
-<ul>
-<li>
-<p><a href="./%E5%9B%BE%E8%AE%BA/Connectivity/SCC">SCC 强联通分量</a></p>
-<ol>
-<li><a href="./%E5%9B%BE%E8%AE%BA/Connectivity/SCC/SCC.md">Markdown</a></li>
-<li><a href="./%E5%9B%BE%E8%AE%BA/Connectivity/SCC/SCC.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E5%9B%BE%E8%AE%BA/Connectivity/DCC/">DCC 双联通分量</a></p>
-<ol>
-<li><a href="./%E5%9B%BE%E8%AE%BA/Connectivity/DCC/DCC.md">Markdown</a></li>
-<li><a href="./%E5%9B%BE%E8%AE%BA/Connectivity/DCC/DCC.html">HTML</a></li>
-</ol>
-</li>
-</ul>
-</li>
-<li>
-<p><a href="./%E5%9B%BE%E8%AE%BA/MST/">MST 最小生成树</a></p>
-<ol>
-<li><a href="./%E5%9B%BE%E8%AE%BA/MST/MST.md">Markdown</a></li>
-<li><a href="./%E5%9B%BE%E8%AE%BA/MST/MST.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E5%9B%BE%E8%AE%BA/Tree/">Tree 树相关</a></p>
-<ul>
-<li>
-<p><a href="./%E5%9B%BE%E8%AE%BA/Tree/LCA/">LCA 最近公共祖先</a></p>
-<ol>
-<li><a href="./%E5%9B%BE%E8%AE%BA/Tree/LCA/LCA.md">Markdown</a></li>
-<li><a href="./%E5%9B%BE%E8%AE%BA/Tree/LCA/LCA.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E5%9B%BE%E8%AE%BA/Tree/TreeDiameter/">TreeDiameter 树的直径</a></p>
-<ol>
-<li><a href="./%E5%9B%BE%E8%AE%BA/Tree/TreeDiameter/TD.md">Markdown</a></li>
-<li><a href="./%E5%9B%BE%E8%AE%BA/Tree/TreeDiameter/TD.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="%E5%9B%BE%E8%AE%BA\Tree\Heavy-Light%20Decoposition">Heavy-Light Decposition</a></p>
-<ol>
-<li><a href="./%E5%9B%BE%E8%AE%BA/Tree/Heavy-Light%20Decoposition/HLD.md">Markdown</a></li>
-<li><a href="./%E5%9B%BE%E8%AE%BA/Tree/Heavy-Light%20Decoposition/HLD.html">HTML</a></li>
-</ol>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">Data Structures数据结构</a></p>
-<ul>
-<li>
-<p><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/DSU/">DSU 并查集</a></p>
-<ol>
-<li><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/DSU/DSU.md">Markdown</a></li>
-<li><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/DSU/DSU.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/SegmentTree/">Segment Tree 线段树</a></p>
-<ol>
-<li><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/SegmentTree/SegmentTree.md">Markdown</a></li>
-<li><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/SegmentTree/SegmentTree.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/SparseTable/">Sparse Table 稀疏表</a></p>
-<ol>
-<li><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/SparseTable/SparseTable.md">Markdown</a></li>
-<li><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/SparseTable/SparseTable.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/TrieTree/">TrieTree 字典树</a></p>
-<p><s><strong>本章节正在施工中</strong></s></p>
-<ol>
-<li><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/TrieTree/Trie.md">Markdown</a></li>
-<li><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/TrieTree/Trie.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/Matrix/">Matrix</a></p>
-<ol>
-<li><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/Matrix/Matrix.md">Markdown</a></li>
-<li><a href="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/Matrix/Matrix.html">HTML</a></li>
-</ol>
-</li>
-</ul>
-</li>
-<li>
-<p><a href="./%E6%95%B0%E8%AE%BA/">Number Theory数论</a></p>
-<ul>
-<li>
-<p><a href="./%E6%95%B0%E8%AE%BA/%E8%B4%A8%E5%9B%A0%E6%95%B0%E5%88%86%E8%A7%A3/PrimeFactorization.html">Prime Factorization 质因数分解</a></p>
-<ol>
-<li><a href="./%E6%95%B0%E8%AE%BA/%E8%B4%A8%E5%9B%A0%E6%95%B0%E5%88%86%E8%A7%A3/PrimeFactorization.md">Markdown</a></li>
-<li><a href="./%E6%95%B0%E8%AE%BA/%E8%B4%A8%E5%9B%A0%E6%95%B0%E5%88%86%E8%A7%A3/PrimeFactorization.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./%E6%95%B0%E8%AE%BA/%E4%BD%8D%E8%BF%90%E7%AE%97/BitOperator.html">Bit Operator 位运算</a></p>
-<p><s><strong>本章节正在施工中</strong></s></p>
-<ol>
-<li><a href="./%E6%95%B0%E8%AE%BA/%E4%BD%8D%E8%BF%90%E7%AE%97/BitOperator.md">Markdown</a></li>
-<li><a href="./%E6%95%B0%E8%AE%BA/%E4%BD%8D%E8%BF%90%E7%AE%97/BitOperator.html">HTML</a></li>
-</ol>
-</li>
-</ul>
-</li>
-<li>
-<p><a href="./EXT/">EXT</a></p>
-<ul>
-<li>
-<p><a href="./EXT/__gnu_cxx/">__gnu_cxx</a></p>
-<ol>
-<li><a href="./EXT/__gnu_cxx/rope.md">Markdown</a></li>
-<li><a href="./EXT/__gnu_cxx/rope.html">HTML</a></li>
-</ol>
-</li>
-<li>
-<p><a href="./EXT/__gnu_pbds/">__gnu_pbds</a></p>
-<ol>
-<li><a href="./EXT/__gnu_pbds/pbds.md">Markdown</a></li>
-<li><a href="./EXT/__gnu_pbds/pbds.html">HTML</a></li>
-</ol>
-</li>
-</ul>
-</li>
-</ul>
 
       </div>
-      <div class="md-sidebar-toc">
-<div class="md-toc">
-<details style="padding:0;;padding-left:0px;" open="">
-        <summary class="md-toc-link-wrapper">
-          <a href="#readme-使用指南" class="md-toc-link"><p>README 使用指南</p>
-</a>
-          </summary>
-        <div>
-          <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
-          <a href="#profile-简介" class="md-toc-link">
-            <p>Profile 简介</p>
-
-          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
-          <a href="#tip-提醒" class="md-toc-link">
-            <p>Tip 提醒</p>
-
-          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
-          <a href="#update-log-更新日志" class="md-toc-link">
-            <p>Update Log 更新日志</p>
-
-          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
-          <a href="#menu-目录" class="md-toc-link">
-            <p>Menu 目录</p>
-
-          </a></div>
-        </div>
-      </details>
-    
-</div>
-</div>
-      <a id="sidebar-toc-btn">≡</a>
-    
-    
-    
-    
-    
-    
-<script>
-
-var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
-sidebarTOCBtn.addEventListener('click', function(event) {
-  event.stopPropagation()
-  if (document.body.hasAttribute('html-show-sidebar-toc')) {
-    document.body.removeAttribute('html-show-sidebar-toc')
-  } else {
-    document.body.setAttribute('html-show-sidebar-toc', true)
-  }
-})
-</script>
       
+      
+    
+    
+    
+    
+    
+    
   
     </body></html>
