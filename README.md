@@ -76,7 +76,8 @@ It is recommended to use a HTML reader.
     - 更新了一篇刷题笔记
     - 发布Github Page页面
     - **update v1.3.2 on May 7th,2026**
-        - 恢复代理服务，重新
+        - 恢复代理服务，重新提交。
+        - 更改了MIT许可证。
 
 ## Menu 目录
 
