@@ -3,7 +3,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.38/dist/katex.min.css">
       
       
       
@@ -41,29 +41,7 @@
 }
 
       </style>
-      <!--
-MIT License
-
-Copyright (c) 2025 LazyIrpn
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
---><style>
+      <style>
 /* ---------- 通用变量（可按需改） ---------- */
 :root{
   --splash-bg: linear-gradient(135deg,#0f1724,#071226);
@@ -163,6 +141,79 @@ SOFTWARE.
   padding: 6px 8px;
   border-radius: 6px;
   backdrop-filter: blur(4px);
+}
+
+#auto-toc {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  width: 260px;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+  z-index: 99996;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 10px 12px;
+  font-size: 14px;
+  backdrop-filter: blur(8px);
+}
+
+#auto-toc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 700;
+  margin-bottom: 8px;
+  user-select: none;
+}
+
+#auto-toc-body ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#auto-toc-body li {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+#auto-toc-body a {
+  text-decoration: none;
+  color: #444;
+  display: block;
+  padding: 2px 4px;
+  border-radius: 6px;
+}
+
+#auto-toc-body a:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+#auto-toc-body a.active {
+  font-weight: 700;
+  color: #0a66ff;
+}
+
+#auto-toc.collapsed #auto-toc-body {
+  display: none;
+}
+
+/* 文章主体给右侧目录留空 */
+body[for="html-export"] .markdown-preview {
+  padding-right: 320px;
+}
+
+@media (max-width: 1200px) {
+  #auto-toc {
+    display: none;
+  }
+  body[for="html-export"] .markdown-preview {
+    padding-right: 2em;
+  }
 }
 
 /* 打印/导出时隐藏这些 UI */
@@ -308,14 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 若页面很小或 JS 报错，5s 后确保移除
   setTimeout(() => { hideSplash(false); }, CONFIG.splashMaxWaitMs + 1200);
 });
-</script>
-<!-- ===== End of head 插件 ===== -->
 
-
- <!-- ===== 自动右侧目录（TOC） ===== -->
-
-
-<script>
 /* ========= 仅浏览器生效（VS Code Preview 中禁用） ========= */
 function isVSCodePreview() {
   return typeof acquireVsCodeApi === "function";
@@ -372,6 +416,24 @@ if (!isVSCodePreview()) {
 
     document.body.appendChild(toc);
 
+    const homeLink = document.createElement('a');
+    homeLink.href = 'https://justraincoat.github.io/Notebook';
+    homeLink.textContent = '🏠 主页';
+    homeLink.target = '_blank';
+    homeLink.style.marginLeft = '12px';
+    homeLink.style.fontSize = '14px';
+    homeLink.style.textDecoration = 'none';
+    homeLink.style.color = '#0a66ff';
+    homeLink.style.fontWeight = '500';
+    // 阻止点击链接时触发展开/折叠
+    homeLink.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    // 插入到箭头前面（与“目录”同行）
+    const arrowSpan = header.querySelector('#auto-toc-arrow');
+    header.insertBefore(homeLink, arrowSpan);
+    
     /* 折叠 */
     header.addEventListener("click", () => {
       toc.classList.toggle("collapsed");
@@ -399,10 +461,9 @@ if (!isVSCodePreview()) {
   });
 }
 </script>
-
-<!-- ===== TOC End ===== --></head><body for="html-export">
-    
-    
+<!-- ===== TOC End ===== -->
+    </head>
+    <body for="html-export">
       <div class="crossnote markdown-preview  ">
       
 <h1 id="矩阵">矩阵 </h1>
@@ -410,46 +471,35 @@ if (!isVSCodePreview()) {
 <p>矩阵作为一种存储向量的方式，是一种必须的数据结构。</p>
 <h2 id="code">Code </h2>
 <p><strong>注意（重载输入输出流时）：</strong> 要记得返回 <code>istream</code> 或 <code>ostream</code>，并且仔细思考，哪些需要<strong>引用传参</strong>，哪些<strong>不能使用引用传参</strong>。</p>
-<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token keyword keyword-struct">struct</span> <span class="token class-name">Matrix</span> <span class="token punctuation">{</span>
-	<span class="token keyword keyword-int">int</span> size_x<span class="token punctuation">,</span>size_y<span class="token punctuation">,</span>res<span class="token punctuation">[</span>maxn<span class="token punctuation">]</span><span class="token punctuation">[</span>maxn<span class="token punctuation">]</span><span class="token punctuation">;</span>
-	<span class="token keyword keyword-inline">inline</span> <span class="token keyword keyword-void">void</span> <span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token function">memset</span><span class="token punctuation">(</span>res<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token keyword keyword-sizeof">sizeof</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
-	Matrix <span class="token function">creatM</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> size_x<span class="token punctuation">,</span><span class="token keyword keyword-int">int</span> size_y<span class="token punctuation">)</span><span class="token punctuation">{</span>
-		Matrix ep<span class="token punctuation">;</span>
-		ep<span class="token punctuation">.</span>size_x <span class="token operator">=</span> size_x<span class="token punctuation">;</span>
-		ep<span class="token punctuation">.</span>size_y <span class="token operator">=</span> size_y<span class="token punctuation">;</span>
-		ep<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token keyword keyword-return">return</span> ep<span class="token punctuation">;</span>
-	<span class="token punctuation">}</span>
-	<span class="token keyword keyword-friend">friend</span> Matrix <span class="token keyword keyword-operator">operator</span> <span class="token operator">*</span> <span class="token punctuation">(</span>Matrix A<span class="token punctuation">,</span> Matrix B<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-		Matrix ans<span class="token operator">=</span>ans<span class="token punctuation">.</span><span class="token function">creatM</span><span class="token punctuation">(</span>A<span class="token punctuation">.</span>size_x<span class="token punctuation">,</span>B<span class="token punctuation">.</span>size_y<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token keyword keyword-if">if</span><span class="token punctuation">(</span>A<span class="token punctuation">.</span>size_y <span class="token operator">!=</span> B<span class="token punctuation">.</span>size_x<span class="token punctuation">)</span><span class="token keyword keyword-return">return</span> ans<span class="token punctuation">;</span>
-		<span class="token keyword keyword-for">for</span> <span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> A<span class="token punctuation">.</span>size_x<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
-			<span class="token keyword keyword-for">for</span> <span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> j <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token generic-function"><span class="token function">j</span> <span class="token generic class-name"><span class="token operator">&lt;=</span> B<span class="token punctuation">.</span>size_y<span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span>
-				<span class="token keyword keyword-for">for</span> <span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> k <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> k <span class="token operator">&lt;=</span> A<span class="token punctuation">.</span>size_y<span class="token punctuation">;</span> k<span class="token operator">++</span><span class="token punctuation">)</span>
-					ans<span class="token punctuation">.</span>res<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>ans<span class="token punctuation">.</span>res<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token punctuation">(</span>A<span class="token punctuation">.</span>res<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">%</span> mod<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>B<span class="token punctuation">.</span>res<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">%</span> mod<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">%</span> mod<span class="token punctuation">;</span>
-		<span class="token keyword keyword-return">return</span> ans<span class="token punctuation">;</span>
-	<span class="token punctuation">}</span>
-	<span class="token keyword keyword-friend">friend</span> istream<span class="token operator">&amp;</span> <span class="token keyword keyword-operator">operator</span> <span class="token operator">&gt;&gt;</span></span></span> <span class="token punctuation">(</span>istream<span class="token operator">&amp;</span> stream<span class="token punctuation">,</span>Matrix<span class="token operator">&amp;</span> A<span class="token punctuation">)</span><span class="token punctuation">{</span>
-		<span class="token keyword keyword-for">for</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> i<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>i<span class="token operator">&lt;=</span>A<span class="token punctuation">.</span>size_x<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
-			<span class="token keyword keyword-for">for</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> j<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>j<span class="token operator">&lt;=</span>A<span class="token punctuation">.</span>size_y<span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>
-				stream<span class="token operator">&gt;&gt;</span>A<span class="token punctuation">.</span>res<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">;</span>
-		<span class="token keyword keyword-return">return</span> stream<span class="token punctuation">;</span>
-		
-	<span class="token punctuation">}</span>
-	<span class="token keyword keyword-friend">friend</span> ostream<span class="token operator">&amp;</span> <span class="token keyword keyword-operator">operator</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span>ostream<span class="token operator">&amp;</span> stream<span class="token punctuation">,</span>Matrix A<span class="token punctuation">)</span><span class="token punctuation">{</span>
-		<span class="token keyword keyword-for">for</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> i<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>i<span class="token operator">&lt;=</span>A<span class="token punctuation">.</span>size_x<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-			<span class="token keyword keyword-for">for</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> j<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>j<span class="token operator">&lt;=</span>A<span class="token punctuation">.</span>size_y<span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-				stream<span class="token operator">&lt;&lt;</span>A<span class="token punctuation">.</span>res<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token operator">&lt;&lt;</span><span class="token char">' '</span><span class="token punctuation">;</span>
-			<span class="token punctuation">}</span>
-			stream<span class="token operator">&lt;&lt;</span><span class="token char">'\n'</span><span class="token punctuation">;</span>
-		<span class="token punctuation">}</span>
-		<span class="token keyword keyword-return">return</span> stream<span class="token punctuation">;</span>
-	<span class="token punctuation">}</span>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token keyword keyword-struct">struct</span> <span class="token class-name">Matrix</span><span class="token punctuation">{</span>
+    <span class="token keyword keyword-int">int</span> n<span class="token punctuation">,</span>m<span class="token punctuation">;</span>
+    std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span>std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token operator">&gt;&gt;</span> info<span class="token punctuation">;</span>
+    std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token operator">&gt;</span><span class="token operator">&amp;</span> <span class="token keyword keyword-operator">operator</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token keyword keyword-const">const</span> <span class="token keyword keyword-int">int</span><span class="token operator">&amp;</span> k<span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token keyword keyword-return">return</span> info<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token punctuation">}</span>
+    <span class="token keyword keyword-const">const</span> std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token operator">&gt;</span><span class="token operator">&amp;</span> <span class="token keyword keyword-operator">operator</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token keyword keyword-const">const</span> <span class="token keyword keyword-int">int</span><span class="token operator">&amp;</span> k<span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token punctuation">{</span><span class="token keyword keyword-return">return</span> info<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token punctuation">}</span>
+    <span class="token function">Matrix</span><span class="token punctuation">(</span><span class="token keyword keyword-const">const</span> <span class="token keyword keyword-int">int</span><span class="token operator">&amp;</span> _n<span class="token punctuation">,</span><span class="token keyword keyword-const">const</span> <span class="token keyword keyword-int">int</span><span class="token operator">&amp;</span> _m<span class="token punctuation">,</span><span class="token keyword keyword-const">const</span> <span class="token keyword keyword-int">int</span><span class="token operator">&amp;</span> a<span class="token punctuation">,</span><span class="token keyword keyword-const">const</span> <span class="token keyword keyword-int">int</span><span class="token operator">&amp;</span> b<span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token comment">//a = 全局，b = 主对角线</span>
+        n <span class="token operator">=</span> _n<span class="token punctuation">,</span>m <span class="token operator">=</span> _m<span class="token punctuation">;</span>
+        info<span class="token punctuation">.</span><span class="token function">resize</span><span class="token punctuation">(</span>n<span class="token punctuation">,</span>std<span class="token double-colon punctuation">::</span><span class="token generic-function"><span class="token function">vector</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword keyword-int">int</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span>m<span class="token punctuation">,</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//info初始化 + 全局赋值</span>
+        <span class="token keyword keyword-for">for</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>std<span class="token double-colon punctuation">::</span><span class="token function">min</span><span class="token punctuation">(</span>n<span class="token punctuation">,</span>m<span class="token punctuation">)</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>info<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> b<span class="token punctuation">;</span><span class="token comment">//主对角线赋值</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword keyword-friend">friend</span> Matrix <span class="token keyword keyword-operator">operator</span> <span class="token operator">*</span><span class="token punctuation">(</span><span class="token keyword keyword-const">const</span> Matrix<span class="token operator">&amp;</span> a<span class="token punctuation">,</span><span class="token keyword keyword-const">const</span> Matrix<span class="token operator">&amp;</span> b<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword keyword-if">if</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>m <span class="token operator">!=</span> b<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token keyword keyword-throw">throw</span> std<span class="token double-colon punctuation">::</span><span class="token function">runtime_error</span><span class="token punctuation">(</span><span class="token string">"矩阵必须可乘"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Matrix <span class="token function">res</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>n<span class="token punctuation">,</span>b<span class="token punctuation">.</span>m<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-for">for</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>a<span class="token punctuation">.</span>n<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
+            <span class="token keyword keyword-for">for</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> k<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>k<span class="token operator">&lt;</span>a<span class="token punctuation">.</span>m<span class="token punctuation">;</span>k<span class="token operator">++</span><span class="token punctuation">)</span>
+                <span class="token keyword keyword-if">if</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token keyword keyword-for">for</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> j<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>j<span class="token operator">&lt;</span>b<span class="token punctuation">.</span>m<span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>res<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">+=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">*</span> b<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">,</span>res<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">%=</span> mod<span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> res<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword keyword-friend">friend</span> Matrix <span class="token keyword keyword-operator">operator</span><span class="token operator">^</span><span class="token punctuation">(</span>Matrix mat<span class="token punctuation">,</span><span class="token keyword keyword-int">int</span> p<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword keyword-if">if</span><span class="token punctuation">(</span>mat<span class="token punctuation">.</span>m <span class="token operator">!=</span> mat<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token keyword keyword-throw">throw</span> std<span class="token double-colon punctuation">::</span><span class="token function">runtime_error</span><span class="token punctuation">(</span><span class="token string">"矩阵必须可幂"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Matrix <span class="token function">ret</span><span class="token punctuation">(</span>mat<span class="token punctuation">.</span>n<span class="token punctuation">,</span>mat<span class="token punctuation">.</span>n<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword keyword-for">for</span><span class="token punctuation">(</span><span class="token punctuation">;</span>p<span class="token punctuation">;</span>p<span class="token operator">&gt;&gt;=</span><span class="token number">1</span><span class="token punctuation">,</span>mat <span class="token operator">=</span> mat <span class="token operator">*</span> mat<span class="token punctuation">)</span><span class="token keyword keyword-if">if</span><span class="token punctuation">(</span>p<span class="token operator">&amp;</span><span class="token number">1</span><span class="token punctuation">)</span>ret <span class="token operator">=</span> ret <span class="token operator">*</span> mat<span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> ret<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
-</code></pre><h2 id="例题1">例题1 </h2>
+</code></pre><h2 id="矩阵快速幂">矩阵快速幂 </h2>
 <p><a href="https://www.luogu.com.cn/problem/P3390">P3390 【模板】矩阵快速幂</a></p>
 <p><a href="..\..\Code\P3390.cpp">Code</a></p>
-<h2 id="例题2">例题2 </h2>
+<h2 id="矩阵加速递推">矩阵加速递推 </h2>
 <p><a href="https://www.luogu.com.cn/problem/P1939">P1939 矩阵加速（数列）</a></p>
 <p><strong>通过这道题看懂矩阵快速幂的应用</strong></p>
 <ol>
@@ -507,15 +557,59 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"></path></svg></span></span></span><span c
 H403z M403 1759 V0 H319 V1759 v0 v1759 h84z"></path></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.667em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.667em" height="3.600em" viewBox="0 0 667 3600"><path d="M347 1759 V0 H0 V84 H263 V1759 v0 v1759 H0 v84 H347z
 M347 1759 V0 H263 V1759 v0 v1759 h84z"></path></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
 <p><a href="..\..\Code\P1939.cpp">Code</a></p>
+<h2 id="矩阵加速dp">矩阵加速dp </h2>
+<p>这类题目通常有明显的标志，如 <strong>数量级达到 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>×</mo><msup><mn>10</mn><mn>15</mn></msup></mrow><annotation encoding="application/x-tex">1 \times 10^{15}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">15</span></span></span></span></span></span></span></span></span></span></span></span></strong>，这时候我们通常需要一个 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> 的算法。于是如果 <strong>恰好DP转移是一维齐次式</strong>，那么我们就可以使用矩阵快速幂优化DP。其实DP就是利用递推完成的，状态设计可以参考<a href="#%E7%9F%A9%E9%98%B5%E5%8A%A0%E9%80%9F%E9%80%92%E6%8E%A8">矩阵加速递推</a>。</p>
 
       </div>
+      <div class="md-sidebar-toc">
+<div class="md-toc">
+<details style="padding:0;;padding-left:0px;" open="">
+        <summary class="md-toc-link-wrapper">
+          <a href="#矩阵" class="md-toc-link"><p>矩阵</p>
+</a>
+          </summary>
+        <div>
+          <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#code" class="md-toc-link">
+            <p>Code</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#矩阵快速幂" class="md-toc-link">
+            <p>矩阵快速幂</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#矩阵加速递推" class="md-toc-link">
+            <p>矩阵加速递推</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#矩阵加速dp" class="md-toc-link">
+            <p>矩阵加速dp</p>
+
+          </a></div>
+        </div>
+      </details>
+    
+</div>
+</div>
+      <a id="sidebar-toc-btn">≡</a>
+    
+    
+    
+    
+    
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
       
-      
-    
-    
-    
-    
-    
-    
   
     </body></html>

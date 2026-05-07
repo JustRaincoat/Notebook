@@ -56,13 +56,11 @@ It is recommended to use a HTML reader.
     - 更新了所有的链接。
     - **切换主要阅读模式至网页阅读**。
     - 生成了所有 `Markdown` 的 `HTML` 内容。
-
-6. **update v1.1.1 on Jan 23th,2026**
-    - 修复了`措(cuo)鳖(bie)子(zi)`。
-    - 更新了线段树的代码。
-
-7. **update v1.1.2 on Feb 11th,2026**
-    - 完成了树链剖分（重链剖分）的部分，包括文字说明和例题代码。
+    - **update v1.1.1 on Jan 23th,2026**
+        - 修复了`措(cuo)鳖(bie)子(zi)`。
+        - 更新了线段树的代码。
+    - **update v1.1.2 on Feb 11th,2026**
+        - 完成了树链剖分（重链剖分）的部分，包括文字说明和例题代码。
 
 8. **update v1.2.0 on Feb 11th,2026**
     - 不再提供 PDF 版本。
@@ -77,6 +75,8 @@ It is recommended to use a HTML reader.
     - 时隔两个月的再次更新。这两个月间，完成了dp专项的学习，然而并没有写到Blog里面
     - 更新了一篇刷题笔记
     - 发布Github Page页面
+    - **update v1.3.2 on May 7th,2026**
+        - 恢复代理服务，重新
 
 ## Menu 目录
 
