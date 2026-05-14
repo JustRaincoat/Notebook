@@ -43,6 +43,7 @@ export_on_save:
 
 ```cpp
 struct HLDT{//Heavy-Light Decomposed Tree
+    const vec2<> &g;//树的邻接表 the adjacency list of the tree
     struct Node{//树中的每个节点 each node in the tree
         int id;//该节点的编号 idenity
         int faid;//该节点的父节点编号 father idenity
@@ -54,11 +55,11 @@ struct HLDT{//Heavy-Light Decomposed Tree
         int dfn;//该节点的dfs序号 DFS_number
         Node* top;//该节点所属的重链的 top 节点
         std::vector<Node*> s;//该节点的所有儿子 son
-        Node(Node* u,int _id,auto& m){//新建一个编号为v的节点，指定u为他的父节点，自动添加 id 映射
+        Node(Node* u,int _id,auto& m){//新建一个编号为_id的节点，指定u为他的父节点，自动添加 id 映射
             id = _id,dept = u->dept + 1,fa = u,faid = u->id,siz = 1,hs = nullptr,top = nullptr,dfn = 0;m[_id] = this;
             u->s.push_back(this);//把该节点加入到父节点的儿子队列中
         }
-        Node(auto& m){id = 0,dept = 0,fa = nullptr,faid = 0,siz = 1,hs = nullptr,top = nullptr,dfn = 0;m[id] = this;}//新建一个编号为v的节点，指定u为他的父节点，自动添加 id 映射
+        Node(auto& m){id = 0,dept = 0,fa = nullptr,faid = 0,siz = 1,hs = nullptr,top = nullptr,dfn = 0;m[id] = this;}//新建root
     };
     Node* root;
     std::unordered_map<int,Node*> idc;//Id 控制器 id-controller
@@ -84,15 +85,16 @@ struct HLDT{//Heavy-Light Decomposed Tree
     }
     void build(){dfs_build(root= new Node(idc));}//建树
     void link(){root->top = root;dfs_link(root);}//链接重链
-    SGT sgt;
-    HLDT(){
-        build(),link();
-        sgt.build(sgt.root = new SGT::Node(SGT::Rge(1,n)));
+    HLDT(const vec2<> &g):g(g){build(),link();}
+    int lca(int _u,int _v){
+        auto u = idc[_u],v = idc[_v];
+        for(;u->top != v->top;u = u->top->fa)if(u->top->dept < v->top->dept)std::swap(u,v);
+        return u->dept > v->dept ? v->id : u->id;
     }
 };
 ```
 
-此外需要一个线段树来支持区间操作，在此不赘述，见线段树章节。
+请注意新建`root`时的 `id` 与图上的存储 `id` 对齐。
 
 ## 树上操作
 
