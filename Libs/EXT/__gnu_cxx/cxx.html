@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head>
-      <title>README</title>
+      <title>cxx</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
@@ -468,159 +468,288 @@ if (!isVSCodePreview()) {
     <body for="html-export">
       <div class="crossnote markdown-preview  ">
       
-<h1 id="readme-使用指南">README 使用指南 </h1>
-<h2 id="profile-简介">Profile 简介 </h2>
-<p>如果你打开了这份文件，恭喜你，你已经知道这个文件夹是干什么的啦！</p>
-<p>Just a notebook.</p>
-<h2 id="tip-提醒">Tip 提醒 </h2>
-<div class="admonition success">
-<p class="admonition-title">已修复</p>
-<p>所有失效链接已修复，推荐使用浏览器打开 HTML！</p>
+<h1 id="平衡树-rope">平衡树 Rope </h1>
+<div class="admonition quote">
+<p class="admonition-title">该部分创作声明</p>
+<p>部分内容转载自： <a href="https://www.cnblogs.com/XichenOC/p/18684418">神级STL结构-rope大法（学习笔记）</a>，有删改。<br>
+可能含有 AIGC 内容，请注意辨别。</p>
 </div>
-<p>推荐：使用 HTML 阅读器打开。</p>
-<p>最低限度：文本阅读器查看 <code>Markdown</code> 文本内容</p>
-<p>It is recommended to use a HTML reader.</p>
-<h2 id="menu-目录">Menu 目录 </h2>
-<p>在这里找到你想要的一切！</p>
-<p>To index Page:<a href="./index.html">HTML</a> | <a href="./index.md">Markdown</a></p>
-<h2 id="update-log-更新日志">Update Log 更新日志 </h2>
-<p><strong>Github Commit - Explain</strong></p>
+<h2 id="声明">声明 </h2>
+<p>rope 最初是作为字符串的存储结构，对<strong>字符类型</strong>有优化 <code>crope</code>。但同时他也支持泛型编程（<strong>可比较类型</strong>或小于号<strong>重载</strong>，与上述 <code>Tree</code> 相同），一般来说，使用<code>rope&lt;typename&gt;</code> 来进行声明，你可以将他理解为一个增强版的 <code>vector&lt;typename&gt;</code>。</p>
+<h2 id="用法">用法 </h2>
 <ol>
 <li>
-<p><strong>update v1.0.1 on Jan 12th,2026</strong></p>
-<ul>
-<li>update <code>README.md</code> 结束 <code>README.md</code> 目录施工。</li>
-<li>update <code>P10049.md</code> 结束 <code>P10049.md</code> 内容撰写与 HTML 发布。</li>
-<li>update <code>PrimeFactorization.md</code> 结束 <code>PrimeFactorization.md</code> 内容撰写与 HTML 发布。</li>
-<li>update <code>BitOperator.md</code> 挖坑待填。</li>
-</ul>
+<p><strong>基本操作</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+<th>时间复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rope&lt;char&gt; r</code> / <code>crope r</code></td>
+<td>构造空 rope</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>crope r("text")</code></td>
+<td>使用字符串构造</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.push_back(c)</code></td>
+<td>在末尾添加字符</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.insert(pos, str)</code></td>
+<td>在位置 pos 插入字符串</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo>+</mo><mi>m</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n + m)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.erase(pos, len)</code></td>
+<td>从 pos 开始删除 len 个字符</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.replace(pos, str)</code></td>
+<td>从 pos 开始替换为字符串</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo>+</mo><mi>m</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n + m)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.substr(pos, len)</code></td>
+<td>从 pos 开始截取 len 个字符</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo>+</mo><mi>l</mi><mi>e</mi><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n + len)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">e</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.append(str)</code></td>
+<td>在末尾追加字符串</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo>+</mo><mi>m</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n + m)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.clear()</code></td>
+<td>清空所有内容</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r = r1 + r2</code></td>
+<td>连接两个 rope</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo>+</mo><mi>log</mi><mo>⁡</mo><mi>m</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n + \log m)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
 </li>
 <li>
-<p><strong>update v1.0.2 on Jan 14th,2026</strong></p>
-<ul>
-<li>update <code>IndeterminateEquation.md</code> 挖坑待填。</li>
-<li>update <code>Inverse.md</code> 施工中。</li>
-<li>update <code>PrimeFactorization.md</code> 施工完毕。</li>
-</ul>
+<p><strong>访问与遍历</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+<th>时间复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>r[i]</code></td>
+<td>访问第 i 个字符（无边界检查）</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.at(i)</code></td>
+<td>访问第 i 个字符（有边界检查）</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.begin()</code>, <code>r.end()</code></td>
+<td>返回正向迭代器</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.rbegin()</code>, <code>r.rend()</code></td>
+<td>返回反向迭代器</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.c_str()</code></td>
+<td>转换为 C 风格字符串</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
 </li>
 <li>
-<p><strong>update v1.0.3 on Jan 16th,2026</strong></p>
-<ul>
-<li>更新平衡树相关内容，持续施工中。</li>
-<li>创建 <code>/gnu_cxx/</code> 用于记录实用的非 STL 函数。</li>
-<li>更新 <code>README.md</code> 的部分说明。</li>
-</ul>
+<p><strong>容量与信息</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+<th>时间复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>r.size()</code></td>
+<td>返回字符数量</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.length()</code></td>
+<td>返回字符数量（同 size）</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.empty()</code></td>
+<td>判断是否为空</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.max_size()</code></td>
+<td>返回最大可能大小</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
 </li>
 <li>
-<p><strong>update v1.0.4 on Jan 20th,2026</strong></p>
-<ul>
-<li>更新 <code>rope</code> 相关内容。</li>
-<li><strong>update v1.0.4.1 on Jan 20th,2026</strong>
-<ul>
-<li>修复了部分文件的命名规范</li>
-<li>完善了 <code>README.md</code> 中目录和更新的内容</li>
-</ul>
-</li>
-<li><strong>update v1.0.4.2 on Jan 20th,2026</strong>
-<ul>
-<li>紧急修复了<code>README.md</code> 中部分链接错误</li>
-</ul>
-</li>
-<li><strong>update v1.0.4.3 on Jan 20th,2026</strong>
-<ul>
-<li>修缮了 <code>README.md</code> 部分文字说明。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.1.0 on Jan 21th,2026</strong></p>
-<ul>
-<li>更新了所有的链接。</li>
-<li><strong>切换主要阅读模式至网页阅读</strong>。</li>
-<li>生成了所有 <code>Markdown</code> 的 <code>HTML</code> 内容。</li>
-<li><strong>update v1.1.1 on Jan 23th,2026</strong>
-<ul>
-<li>修复了<code>措(cuo)鳖(bie)子(zi)</code>。</li>
-<li>更新了线段树的代码。</li>
-</ul>
-</li>
-<li><strong>update v1.1.2 on Feb 11th,2026</strong>
-<ul>
-<li>完成了树链剖分（重链剖分）的部分，包括文字说明和例题代码。</li>
-</ul>
-</li>
-</ul>
+<p><strong>查找与比较</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+<th>时间复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>r.find(str, pos)</code></td>
+<td>从 pos 开始查找字符串（实现依赖）</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mi>m</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n + m)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.compare(pos, len, str)</code></td>
+<td>与字符串比较</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>l</mi><mi>e</mi><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(len)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">e</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code> 等</td>
+<td>关系运算符</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>n</mi><mo separator="true">,</mo><mi>m</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\min(n, m))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">min</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mclose">))</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
 </li>
 <li>
-<p><strong>update v1.2.0 on Feb 11th,2026</strong></p>
-<ul>
-<li>不再提供 PDF 版本。</li>
-<li>在目录中添加了树链剖分的部分。</li>
-<li><strong>update v1.2.1 on Feb 27th,2026</strong>
-<ul>
-<li>更新了一道树链剖分的例题。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.3.0 on Feb 27th,2026</strong></p>
-<ul>
-<li>增加了html的动画效果（仅部分有，若该文件没有，会在最后一次更新后，自动添加）。</li>
-</ul>
-</li>
-<li>
-<p><strong>update v1.3.1 on April 15th,2026</strong></p>
-<ul>
-<li>时隔两个月的再次更新。这两个月间，完成了dp专项的学习，然而并没有写到Blog里面</li>
-<li>更新了一篇刷题笔记</li>
-<li>发布Github Page页面</li>
-<li><strong>update v1.3.1.1 on May 7th,2026</strong>
-<ul>
-<li>恢复代理服务，重新提交。</li>
-<li>更改了MIT许可证。</li>
-</ul>
-</li>
-<li><strong>update v1.3.1.2 on May 11th 2026</strong>
-<ul>
-<li>增加了树的直径的求法证明</li>
-<li>更换了新的目录样式，更方便查找</li>
-</ul>
-</li>
-<li><strong>update v1.3.1.3 on May 14th 2026</strong>
-<ul>
-<li>改了之前的版本号命名</li>
-<li>LCA部分完坑</li>
-</ul>
-</li>
-</ul>
+<p><strong>特殊操作</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+<th>时间复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>r.copy(pos, len, str)</code></td>
+<td>复制到字符串 str</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>l</mi><mi>e</mi><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(len)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">e</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>swap(r1, r2)</code></td>
+<td>交换两个 rope 内容</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.reserve(size)</code></td>
+<td>预留空间（实现依赖）</td>
+<td>实现相关</td>
+</tr>
+<tr>
+<td><code>r.capacity()</code></td>
+<td>返回当前容量（实现依赖）</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
 </li>
 <li>
-<p><strong>update v2.0.0 on May 15th 2026</strong></p>
-<ul>
-<li>更新了链接系统</li>
-</ul>
+<p><strong>迭代器操作</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+<th>时间复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>r.begin() + n</code></td>
+<td>前进 n 个位置</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>r.end() - n</code></td>
+<td>后退 n 个位置</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>distance(it1, it2)</code></td>
+<td>计算迭代器间距离</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td><code>advance(it, n)</code></td>
+<td>迭代器前进 n 步</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo>+</mo><mi mathvariant="normal">∣</mi><mi>n</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n + |n|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">n</span><span class="mord">∣</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
 </li>
 </ol>
+<h2 id="适用场景">适用场景 </h2>
+<div class="admonition success">
+<p class="admonition-title">正确应用</p>
+<ol>
+<li><strong>频繁的中间插入/删除</strong>：如文本编辑器、IDE</li>
+<li><strong>超大字符串处理</strong>：如基因组序列分析</li>
+<li><strong>版本控制系统</strong>：需要频繁修改的文本</li>
+<li><strong>字符串拼接/拆分频繁</strong>的场景</li>
+</ol>
+</div>
+<div class="admonition error">
+<p class="admonition-title">错误应用</p>
+<ol>
+<li><strong>空间开销</strong>：比 <code>std::string</code> 更大，因为有额外的树结构</li>
+<li><strong>访问延迟</strong>：随机访问稍慢，但批量操作更快</li>
+<li><strong>不适合</strong>：只有随机访问需求的场景（用 <code>std::string</code> 更好）</li>
+</ol>
+</div>
+<h2 id="problemhttpswwwluogucomcnproblemp3391---codecodeluogu_p_3391_模板_文艺平衡树cpp"><a href="https://www.luogu.com.cn/problem/P3391">Problem</a> - <a href="..\..\..\Code\Luogu_P_3391_%E6%A8%A1%E6%9D%BF_%E6%96%87%E8%89%BA%E5%B9%B3%E8%A1%A1%E6%A0%91.cpp">Code</a> </h2>
 
       </div>
       <div class="md-sidebar-toc"><div class="md-toc">
 <details open="" class="md-toc-details">
 <summary class="md-toc-link-wrapper" data-level="0">
-  <a href="#readme-使用指南" class="md-toc-link">README 使用指南</a>
+  <a href="#平衡树-rope" class="md-toc-link">平衡树 Rope</a>
 </summary>
 <div class="md-toc-link-wrapper" data-level="1">
-  <a href="#profile-简介" class="md-toc-link">Profile 简介</a>
+  <a href="#声明" class="md-toc-link">声明</a>
 </div>
 <div class="md-toc-link-wrapper" data-level="1">
-  <a href="#tip-提醒" class="md-toc-link">Tip 提醒</a>
+  <a href="#用法" class="md-toc-link">用法</a>
 </div>
 <div class="md-toc-link-wrapper" data-level="1">
-  <a href="#menu-目录" class="md-toc-link">Menu 目录</a>
+  <a href="#适用场景" class="md-toc-link">适用场景</a>
 </div>
 <div class="md-toc-link-wrapper" data-level="1">
-  <a href="#update-log-更新日志" class="md-toc-link">Update Log 更新日志</a>
+  <a href="#problemhttpswwwluogucomcnproblemp3391---codecodeluogu_p_3391_模板_文艺平衡树cpp" class="md-toc-link"></a><a href="https://www.luogu.com.cn/problem/P3391">Problem</a> - <a href="/Code/Luogu_P_3391_%E6%A8%A1%E6%9D%BF_%E6%96%87%E8%89%BA%E5%B9%B3%E8%A1%A1%E6%A0%91.cpp">Code</a>
 </div>
 </details>
 </div>

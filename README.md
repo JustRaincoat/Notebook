@@ -27,45 +27,7 @@ It is recommended to use a HTML reader.
 
 在这里找到你想要的一切！
 
-
-| Category | Subcategory | Unit | File |
-| - | - | - | - |
-| STL模板库 | > | > | [Markdown](./STL/STL.md) |
-| ^ | > | > | [HTML](./STL/STL.html) |
-| Graph Theory图论 | Shortest Path Algorithm 最短路算法 | > | [Markdown](./图论/ShortestPath/ShortestPath.md) |
-| ^ | ^ | > | [HTML](./图论/ShortestPath/ShortestPath.html) |
-| ^ | DiffConstraints 差分约束——最短路应用 | > | [Markdown](./图论/DiffConstraints/DC.md) |
-| ^ | ^ | > | [HTML](./图论/DiffConstraints/DC.html) |
-| ^ | Connectivity 连通性问题 | SCC 强联通分量 | [Markdown](./图论/Connectivity/SCC/SCC.md) |
-| ^ | ^ | ^ | [HTML](./图论/Connectivity/SCC/SCC.html) |
-| ^ | ^ | DCC 双联通分量 | [Markdown](./图论/Connectivity/DCC/DCC.md) |
-| ^ | ^ | ^ | [HTML](./图论/Connectivity/DCC/DCC.html) |
-| ^ | MST 最小生成树 | > | [Markdown](./图论/MST/MST.md) |
-| ^ | ^ | > | [HTML](./图论/MST/MST.html) |
-| ^ | Tree 树相关 | LCA 最近公共祖先 | [Markdown](./图论/Tree/LCA/LCA.md) |
-| ^ | ^ | ^ | [HTML](./图论/Tree/LCA/LCA.html) |
-| ^ | ^ | TreeDiameter 树的直径 | [Markdown](./图论/Tree/TreeDiameter/TD.md) |
-| ^ | ^ | ^ | [HTML](./图论/Tree/TreeDiameter/TD.html) |
-| ^ | ^ | Heavy-Light Decposition | [Markdown](./图论/Tree/Heavy-Light%20Decoposition/HLD.md) |
-| ^ | ^ | ^ | [HTML](./图论/Tree/Heavy-Light%20Decoposition/HLD.html) |
-| Data Structures数据结构 | DSU 并查集 | > | [Markdown](./数据结构/DSU/DSU.md) |
-| ^ | ^ | > | [HTML](./数据结构/DSU/DSU.html) |
-| ^ | Segment Tree 线段树 | > | [Markdown](./数据结构/SegmentTree/SegmentTree.md) |
-| ^ | ^ | > | [HTML](./数据结构/SegmentTree/SegmentTree.html) |
-| ^ | Sparse Table 稀疏表 | > | [Markdown](./数据结构/SparseTable/SparseTable.md) |
-| ^ | ^ | > | [HTML](./数据结构/SparseTable/SparseTable.html) |
-| ^ | TrieTree 字典树 | > | [Markdown](./数据结构/TrieTree/Trie.md) |
-| ^ | ^ | > | [HTML](./数据结构/TrieTree/Trie.html) |
-| ^ | Matrix | > | [Markdown](./数据结构/Matrix/Matrix.md) |
-| ^ | ^ | > | [HTML](./数据结构/Matrix/Matrix.html) |
-| Number Theory数论 | Prime Factorization 质因数分解 | > | [Markdown](./数论/质因数分解/PrimeFactorization.md) |
-| ^ | ^ | > | [HTML](./数论/质因数分解/PrimeFactorization.html) |
-| ^ | Bit Operator 位运算 | > | [Markdown](./数论/位运算/BitOperator.md) |
-| ^ | ^ | > | [HTML](./数论/位运算/BitOperator.html) |
-| EXT | __gnu_cxx | > | [Markdown](./EXT/__gnu_cxx/rope.md) |
-| ^ | ^ | > | [HTML](./EXT/__gnu_cxx/rope.html) |
-| ^ | __gnu_pbds | > | [Markdown](./EXT/__gnu_pbds/pbds.md) |
-| ^ | ^ | > | [HTML](./EXT/__gnu_pbds/pbds.html) |
+To index Page:[HTML](./index.html) | [Markdown](./index.md)
 
 ## Update Log 更新日志
 
@@ -107,16 +69,16 @@ It is recommended to use a HTML reader.
     - **update v1.1.2 on Feb 11th,2026**
         - 完成了树链剖分（重链剖分）的部分，包括文字说明和例题代码。
 
-8. **update v1.2.0 on Feb 11th,2026**
+6. **update v1.2.0 on Feb 11th,2026**
     - 不再提供 PDF 版本。
     - 在目录中添加了树链剖分的部分。
     - **update v1.2.1 on Feb 27th,2026**
         - 更新了一道树链剖分的例题。
 
-9. **update v1.3.0 on Feb 27th,2026**
+7. **update v1.3.0 on Feb 27th,2026**
     - 增加了html的动画效果（仅部分有，若该文件没有，会在最后一次更新后，自动添加）。
 
-10. **update v1.3.1 on April 15th,2026**
+8. **update v1.3.1 on April 15th,2026**
     - 时隔两个月的再次更新。这两个月间，完成了dp专项的学习，然而并没有写到Blog里面
     - 更新了一篇刷题笔记
     - 发布Github Page页面
@@ -129,3 +91,5 @@ It is recommended to use a HTML reader.
     - **update v1.3.1.3 on May 14th 2026**
         - 改了之前的版本号命名
         - LCA部分完坑
+9. **update v2.0.0 on May 15th 2026**
+    - 更新了链接系统
