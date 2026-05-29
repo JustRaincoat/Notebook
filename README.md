@@ -85,11 +85,15 @@ To index Page:[HTML](./index.html) | [Markdown](./index.md)
     - **update v1.3.1.1 on May 7th,2026**
         - 恢复代理服务，重新提交。
         - 更改了MIT许可证。
-    - **update v1.3.1.2 on May 11th 2026**
+    - **update v1.3.1.2 on May 11th,2026**
         - 增加了树的直径的求法证明
         - 更换了新的目录样式，更方便查找
-    - **update v1.3.1.3 on May 14th 2026**
+    - **update v1.3.1.3 on May 14th,2026**
         - 改了之前的版本号命名
         - LCA部分完坑
-9. **update v2.0.0 on May 15th 2026**
+9. **update v2.0.0 on May 15th,2026**
     - 更新了链接系统
+    - **update v2.0.1 on May 29th,2026**
+        - 整理了文档结构
+        - 新增一篇刷题笔记
+        - 新增二分查找相关内容

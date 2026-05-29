@@ -34,6 +34,14 @@ export_on_save:
         1. [Markdown](./Libs/EXT/__gnu_pbds/pbds.md)
         2. [HTML](./Libs/EXT/__gnu_pbds/pbds.html)
 
+## 基础算法和常用技巧 Basic Algorithms & Common Tricks
+
+BA&CT: Basic Algorithms & Common Tricks for short，中文译为基础算法和常用技巧。
+
+!!! attention 点击跳转至 BA&CT 选项卡 | Click to index of Basic Algorithms & Common Tricks：
+    1. [HTML](./图论/index.html)
+    2. [Markdown](./图论/index.md)
+
 ## 图论 Graph Theory
 
 !!! attention 点击跳转至图论选项卡 | Click to index of Graph Theory：
@@ -74,3 +82,4 @@ export_on_save:
 | P2114 [NOI2014] 起床困难综合症 | [HTML](/刷题笔记/P2114%20[NOI2014]%20起床困难综合症/P2114.html) | [Markdown](/刷题笔记/P2114%20[NOI2014]%20起床困难综合症/P2114.md) |
 | P7077 [CSP-S 2020] 函数调用 | [HTML](/刷题笔记/P7077%20[CSP-S%202020]%20函数调用/P7077.html) | [Markdown](/刷题笔记/P7077%20[CSP-S%202020]%20函数调用/P7077.md) |
 | P10449 费解的开关 | [HTML](/刷题笔记/P10449%20费解的开关/P10449.html) | [Markdown](/刷题笔记/P10449%20费解的开关/P10449.md) |
+| P2827 [NOIP 2016 提高组] 蚯蚓 | [HTML](/刷题笔记/P2827%20[NOIP%202016%20提高组]%20蚯蚓/P2827.html) | [Markdown](/刷题笔记/P2827%20[NOIP%202016%20提高组]%20蚯蚓/P2827.md) |
