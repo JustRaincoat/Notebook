@@ -1,0 +1,285 @@
+<!-- ============================================================
+     MPE Head Template — 由 index.html 提取生成
+     此文件会被 MPE 自动注入到 Markdown 预览/导出 HTML 的 <head> 尾部
+     ============================================================ -->
+
+<!-- -------- Favicon (使用绝对 URL，兼容所有子目录页面) -------- -->
+<link rel="icon" type="image/x-icon" href="https://justraincoat.github.io/Notebook/icon/icon.ico">
+
+<!-- -------- 自定义样式 -------- -->
+<style>
+/* ---------- 通用变量 ---------- */
+:root {
+  --splash-bg: linear-gradient(135deg, #0f1724, #071226);
+  --accent: #00aaff;
+  --accent2: #00ffcc;
+  --text-weak: rgba(255, 255, 255, 0.85);
+  --signature-color: rgba(0, 0, 0, 0.35);
+}
+
+/* ========== 开屏遮罩 (Splash) ========== */
+#splash-screen {
+  position: fixed; inset: 0;
+  background: var(--splash-bg);
+  color: var(--text-weak);
+  z-index: 99999;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "LXGW WenKai", "Helvetica Neue", Arial, sans-serif;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+#splash-screen.hide { opacity: 0; transform: scale(0.995); pointer-events: none; }
+#splash-inner { text-align: center; transform: translateY(0); }
+#splash-title { font-size: 2.0rem; font-weight: 600; letter-spacing: 0.06em; color: white; }
+#splash-sub { margin-top: .5rem; color: rgba(255,255,255,0.78); font-size: 0.95rem; }
+#splash-loader {
+  margin-top: 1.6rem; width: 44px; height: 44px; border-radius: 50%;
+  border: 4px solid rgba(255,255,255,0.12);
+  border-top-color: rgba(255,255,255,0.9);
+  animation: spspin 1s linear infinite;
+}
+@keyframes spspin { to { transform: rotate(360deg); } }
+
+#splash-skip {
+  position: fixed; left: 12px; bottom: 12px; z-index: 100000;
+  font-size: 13px; color: rgba(255,255,255,0.85);
+  background: rgba(0,0,0,0.18); padding: 6px 10px; border-radius: 6px;
+  cursor: pointer; user-select: none; transition: background .18s;
+}
+#splash-skip:hover { background: rgba(0,0,0,0.28); }
+
+/* ---------- 阅读进度条 ---------- */
+#read-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  z-index: 99998; transition: width 0.12s linear; pointer-events: none;
+}
+
+/* ---------- 署名水印 ---------- */
+#page-signature {
+  position: fixed; right: 16px; bottom: 12px;
+  font-size: 12px; color: var(--signature-color);
+  pointer-events: none; user-select: none; z-index: 99997;
+  background: transparent; padding: 6px 8px; border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+/* ========== 浮动自动目录 ========== */
+#auto-toc {
+  position: fixed; top: 80px; right: 24px; width: 260px;
+  max-height: calc(100vh - 120px); overflow: auto; z-index: 99996;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(0,0,0,0.08); border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  padding: 10px 12px; font-size: 14px; backdrop-filter: blur(8px);
+}
+#auto-toc-header {
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; font-weight: 700; margin-bottom: 8px; user-select: none;
+}
+#auto-toc-body ul { list-style: none; margin: 0; padding: 0; }
+#auto-toc-body li { margin: 4px 0; line-height: 1.4; }
+#auto-toc-body a {
+  text-decoration: none; color: #444; display: block;
+  padding: 2px 4px; border-radius: 6px;
+}
+#auto-toc-body a:hover { background: rgba(0,0,0,0.06); }
+#auto-toc-body a.active { font-weight: 700; color: #0a66ff; }
+#auto-toc.collapsed #auto-toc-body { display: none; }
+
+body[for="html-export"] .markdown-preview { padding-right: 320px; }
+
+@media (max-width: 1200px) {
+  #auto-toc { display: none; }
+  body[for="html-export"] .markdown-preview { padding-right: 2em; }
+}
+@media print {
+  #splash-screen, #read-progress, #page-signature, #splash-skip { display: none !important; }
+}
+
+/* ---------- LXGW WenKai 字体 ---------- */
+.markdown-preview.markdown-preview {
+  @import 'lxgw-wenkai-webfont/lxgwwenkai-regular.css';
+  @import 'lxgw-wenkai-webfont/lxgwwenkai-bold.css';
+  font-family: "LXGW WenKai", sans-serif;
+}
+.markdown-preview.markdown-preview.prince { font-size: smaller; baseUrl: "."; }
+
+/* ---------- Prince 打印 ---------- */
+@page {
+  size: A4; margin: 1cm;
+  @top-center { content: "By __raincoat__"; }
+  @bottom-center { content: "Page " counter(page) " of " counter(pages); }
+}
+.markdown-preview.markdown-preview.prince pre,
+.markdown-preview.markdown-preview.prince code {
+  white-space: pre-wrap; word-wrap: break-word; overflow: auto;
+  position: relative; page-break-inside: auto; break-inside: auto;
+}
+</style>
+
+<!-- -------- 自定义脚本 -------- -->
+<script>
+/*
+ * 集成脚本：Splash 开屏 + 阅读进度条 + 署名水印 + 浮动自动 TOC
+ * 由 index.html 提取生成，通过 MPE head 模板注入
+ */
+
+/* -------- 可配置项 -------- */
+const CONFIG = {
+  blogTitle: 'LazyIrpn/Notebook',
+  author: '__raincoat__[irpn@foxmail.com]',
+  splashShownIntervalDays: 0,
+  splashMinVisibleMs: 800,
+  splashMaxWaitMs: 5000
+};
+
+/* -------- Splash 工具函数 -------- */
+function _splashRecentlyShown() {
+  try {
+    if (!CONFIG.splashShownIntervalDays) return false;
+    var t = parseInt(localStorage.getItem('mpe_splash_last_shown'), 10);
+    if (isNaN(t)) return false;
+    return (Date.now() - t) < CONFIG.splashShownIntervalDays * 24 * 3600 * 1000;
+  } catch (e) { return false; }
+}
+function _markSplashShown() {
+  try { localStorage.setItem('mpe_splash_last_shown', String(Date.now())); } catch (e) {}
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  /* ------ 1) 阅读进度条 ------ */
+  var prog = document.createElement('div');
+  prog.id = 'read-progress';
+  document.body.appendChild(prog);
+  var updateProgress = function () {
+    var doc = document.documentElement;
+    var scrollTop = doc.scrollTop || document.body.scrollTop || 0;
+    var height = doc.scrollHeight - doc.clientHeight;
+    prog.style.width = (height > 0 ? (scrollTop / height) * 100 : 0) + '%';
+  };
+  updateProgress();
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+
+  /* ------ 2) 署名水印 ------ */
+  var sign = document.createElement('div');
+  sign.id = 'page-signature';
+  sign.textContent = '\u00A9 ' + CONFIG.author;
+  document.body.appendChild(sign);
+
+  /* ------ 3) Splash 开屏 ------ */
+  if (_splashRecentlyShown()) return;
+
+  var splash = document.createElement('div');
+  splash.id = 'splash-screen';
+  splash.setAttribute('role', 'dialog');
+  splash.setAttribute('aria-hidden', 'false');
+  splash.innerHTML =
+    '<div id="splash-inner" aria-hidden="false">' +
+    '<div id="splash-title">' + CONFIG.blogTitle + '</div>' +
+    '<div id="splash-sub">By ' + CONFIG.author + '</div>' +
+    '<div id="splash-loader" aria-hidden="true"></div></div>';
+  document.body.appendChild(splash);
+
+  var skip = document.createElement('div');
+  skip.id = 'splash-skip';
+  skip.textContent = 'Skip';
+  skip.title = 'Skip splash';
+  document.body.appendChild(skip);
+
+  var splashHidden = false;
+  var hideSplash = function (instant) {
+    if (instant === undefined) instant = false;
+    if (splashHidden) return;
+    splashHidden = true;
+    try {
+      splash.setAttribute('aria-hidden', 'true');
+      if (instant) { splash.remove(); skip.remove(); }
+      else {
+        splash.classList.add('hide');
+        setTimeout(function () { try { splash.remove(); skip.remove(); } catch (e) {} }, 700);
+      }
+      _markSplashShown();
+    } catch (e) {}
+  };
+
+  var startedAt = Date.now();
+  var finishAfterMin = function () {
+    var remain = Math.max(0, CONFIG.splashMinVisibleMs - (Date.now() - startedAt));
+    setTimeout(function () { hideSplash(false); }, remain);
+  };
+  window.addEventListener('load', finishAfterMin, { once: true });
+  setTimeout(finishAfterMin, CONFIG.splashMaxWaitMs);
+  skip.addEventListener('click', function () { hideSplash(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideSplash(false); });
+  setTimeout(function () { hideSplash(false); }, CONFIG.splashMaxWaitMs + 1200);
+});
+
+/* ========= 自动 TOC（仅浏览器，VS Code Preview 中禁用） ========= */
+if (typeof acquireVsCodeApi !== 'function') {
+  document.addEventListener('DOMContentLoaded', function () {
+    var headings = Array.from(document.body.querySelectorAll('h1, h2, h3, h4'));
+    if (headings.length < 2) return;
+
+    var toc = document.createElement('nav');
+    toc.id = 'auto-toc';
+
+    var header = document.createElement('div');
+    header.id = 'auto-toc-header';
+    header.innerHTML = '<span>\u76EE\u5F55</span><span id="auto-toc-arrow">\u25BE</span>';
+    toc.appendChild(header);
+
+    var bodyDiv = document.createElement('div');
+    bodyDiv.id = 'auto-toc-body';
+    var ul = document.createElement('ul');
+    bodyDiv.appendChild(ul);
+    toc.appendChild(bodyDiv);
+
+    headings.forEach(function (h, i) {
+      if (!h.id) h.id = 'toc-h-' + i;
+      var li = document.createElement('li');
+      li.className = 'level-' + h.tagName[1];
+      var a = document.createElement('a');
+      a.textContent = h.textContent;
+      a.href = '#' + h.id;
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.getElementById(h.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.pushState(null, '', '#' + h.id);
+      });
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    document.body.appendChild(toc);
+
+    var homeLink = document.createElement('a');
+    homeLink.href = 'https://justraincoat.github.io/Notebook';
+    homeLink.textContent = 'HOME \u4E3B\u9875';
+    homeLink.target = '_blank';
+    homeLink.style.cssText = 'margin-left:12px;font-size:14px;text-decoration:none;color:#0a66ff;font-weight:500;';
+    homeLink.addEventListener('click', function (e) { e.stopPropagation(); });
+    header.insertBefore(homeLink, header.querySelector('#auto-toc-arrow'));
+
+    header.addEventListener('click', function () { toc.classList.toggle('collapsed'); });
+
+    var links = toc.querySelectorAll('a');
+    var updateActive = function () {
+      var current = null;
+      for (var j = 0; j < headings.length; j++) {
+        if (headings[j].getBoundingClientRect().top <= 120) current = headings[j];
+        else break;
+      }
+      links.forEach(function (a) { a.classList.remove('active'); });
+      if (current) {
+        var active = toc.querySelector('a[href="#' + current.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    };
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+  });
+}
+</script>

@@ -41,3 +41,13 @@ export_on_save:
 
     1. [Markdown](./Matrix/Matrix.md)
     2. [HTML](./Matrix/Matrix.html)
+
+6. Monotonic Stack 单调栈
+
+    1. [Markdown](./MonotonicStack/MonotonicStack.md)
+    2. [HTML](./MonotonicStack/MonotonicStack.html)
+
+7. Monotonic Queue 单调队列
+
+    1. [Markdown](./MonotonicQueue/MonotonicQueue.md)
+    2. [HTML](./MonotonicQueue/MonotonicQueue.html)
