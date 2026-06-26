@@ -39,8 +39,8 @@ export_on_save:
 BA&CT: Basic Algorithms & Common Tricks for short，中文译为基础算法和常用技巧。
 
 !!! attention 点击跳转至 BA&CT 选项卡 | Click to index of Basic Algorithms & Common Tricks：
-    1. [HTML](./图论/index.html)
-    2. [Markdown](./图论/index.md)
+    1. [HTML](./BA&CT/index.html)
+    2. [Markdown](./BA&CT/index.md)
 
 ## 图论 Graph Theory
 
