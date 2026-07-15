@@ -22,3 +22,8 @@ export_on_save:
     1. [Markdown](./BinarySearch/BinarySearch.md)
     2. [HTML](./BinarySearch/BinarySearch.html)
 
+2. Regret Greedy 反悔贪心
+
+    1. [Markdown](./RegretGreedy/RegretGreedy.md)
+    2. [HTML](./RegretGreedy/RegretGreedy.html)
+

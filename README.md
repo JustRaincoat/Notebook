@@ -106,3 +106,5 @@ To index Page:[HTML](./index.html) | [Markdown](./index.md)
         - 新增 P2422 良好的感觉 例题讲解（单调栈 + 前缀和）
         - 修复主页中 BA&CT 的指向链接错误
         - 清理 HTML 中冗余的自定义样式（开屏动画、浮动目录等）
+    - **update v2.0.4 on July 15th,2026**
+        - 新增反悔贪心。

@@ -28,8 +28,8 @@ export_on_save:
 
 1. 初始化一个空的双端队列（存下标）。
 2. 从左到右遍历数组 $a_i$：
-   - 若队首下标 $< i - k + 1$（窗口左边界），弹出队首。
-   - 当队非空且 $a_i > \text{队尾元素}$ 时，弹出队尾。
+   - 过期：若队首下标 $< i - k + 1$（窗口左边界），弹出队首。
+   - 单调：当队非空且 $a_i > \text{队尾元素}$ 时，弹出队尾。
    - 将下标 $i$ 入队。
    - 当 $i \ge k$ 时，队首下标对应的值即为当前窗口最大值。
 3. 遍历结束。
@@ -40,30 +40,30 @@ export_on_save:
 
 ```cpp
 namespace MonotonicQueue {
-    int q[maxn], head, tail;  // 模拟双端队列，存下标
+    deque<int> q;              // 双端队列，存下标
     int ans[maxn];            // ans[i] 表示以 i 为右端点的窗口最值
 
     // 求滑动窗口最小值（单调递增队列）
     void minWindow(int a[], int n, int k) {
-        head = 1, tail = 0;
+        q.clear();
         for (int i = 1; i <= n; i++) {
             // 淘汰队首过期元素
-            while (head <= tail && q[head] <= i - k) head++;
+            while (!q.empty() && q.front() <= i - k) q.pop_front();
             // 维护单调递增
-            while (head <= tail && a[q[tail]] > a[i]) tail--;
-            q[++tail] = i;
-            if (i >= k) ans[i] = a[q[head]];
+            while (!q.empty() && a[q.back()] > a[i]) q.pop_back();
+            q.push_back(i);
+            if (i >= k) ans[i] = a[q.front()];
         }
     }
 
     // 求滑动窗口最大值（单调递减队列）
     void maxWindow(int a[], int n, int k) {
-        head = 1, tail = 0;
+        q.clear();
         for (int i = 1; i <= n; i++) {
-            while (head <= tail && q[head] <= i - k) head++;
-            while (head <= tail && a[q[tail]] < a[i]) tail--;
-            q[++tail] = i;
-            if (i >= k) ans[i] = a[q[head]];
+            while (!q.empty() && q.front() <= i - k) q.pop_front();
+            while (!q.empty() && a[q.back()] < a[i]) q.pop_back();
+            q.push_back(i);
+            if (i >= k) ans[i] = a[q.front()];
         }
     }
 }
@@ -81,29 +81,30 @@ namespace MonotonicQueue {
 #include <bits/stdc++.h>
 using namespace std;
 const int maxn = 1e6 + 5;
-int n, k, a[maxn], q[maxn], head, tail;
+int n, k, a[maxn];
+deque<int> q;
 
 int main() {
     scanf("%d%d", &n, &k);
     for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
 
     // 最小值（单调递增队列）
-    head = 1, tail = 0;
+    q.clear();
     for (int i = 1; i <= n; i++) {
-        while (head <= tail && q[head] <= i - k) head++;
-        while (head <= tail && a[q[tail]] >= a[i]) tail--;
-        q[++tail] = i;
-        if (i >= k) printf("%d ", a[q[head]]);
+        while (!q.empty() && q.front() <= i - k) q.pop_front();
+        while (!q.empty() && a[q.back()] >= a[i]) q.pop_back();
+        q.push_back(i);
+        if (i >= k) printf("%d ", a[q.front()]);
     }
     printf("\n");
 
     // 最大值（单调递减队列）
-    head = 1, tail = 0;
+    q.clear();
     for (int i = 1; i <= n; i++) {
-        while (head <= tail && q[head] <= i - k) head++;
-        while (head <= tail && a[q[tail]] <= a[i]) tail--;
-        q[++tail] = i;
-        if (i >= k) printf("%d ", a[q[head]]);
+        while (!q.empty() && q.front() <= i - k) q.pop_front();
+        while (!q.empty() && a[q.back()] <= a[i]) q.pop_back();
+        q.push_back(i);
+        if (i >= k) printf("%d ", a[q.front()]);
     }
     return 0;
 }
@@ -117,7 +118,8 @@ int main() {
 #include <bits/stdc++.h>
 using namespace std;
 const int maxn = 5e5 + 5;
-int n, m, a[maxn], sum[maxn], q[maxn], head, tail, ans = -2e9;
+int n, m, a[maxn], sum[maxn], ans = -2e9;
+deque<int> q;
 
 int main() {
     scanf("%d%d", &n, &m);
@@ -125,15 +127,77 @@ int main() {
         scanf("%d", &a[i]);
         sum[i] = sum[i - 1] + a[i];
     }
-    head = 1, tail = 0;
-    q[++tail] = 0;
+    q.clear();
+    q.push_back(0);
     for (int i = 1; i <= n; i++) {
-        while (head <= tail && q[head] < i - m) head++;
-        ans = max(ans, sum[i] - sum[q[head]]);
-        while (head <= tail && sum[q[tail]] >= sum[i]) tail--;
-        q[++tail] = i;
+        while (!q.empty() && q.front() < i - m) q.pop_front();
+        ans = max(ans, sum[i] - sum[q.front()]);
+        while (!q.empty() && sum[q.back()] >= sum[i]) q.pop_back();
+        q.push_back(i);
     }
     printf("%d\n", ans);
+    return 0;
+}
+```
+
+### 例 3：[P3957 跳房子](https://www.luogu.com.cn/problem/P3957)
+
+给定 $n$ 个格子的坐标和分数，机器人从 $0$ 出发，初始只能跳**恰好** $d$ 格。花费 $g$ 金币可升级遥控器，使跳跃距离范围为 $[d-g,d+g]$。求至少获得 $k$ 分所需的最少金币数。
+
+**核心思路**：二分答案 $g$，用单调队列优化 DP 判断可行性。
+
+- $dp[i]$ 表示跳到第 $i$ 个格子能获得的最大分数
+- 转移：$dp[i] = scr[i] + \max\{dp[j] \mid pos[i]-r \le pos[j] \le pos[i]-l\}$
+- 其中 $l = \max(1, d-g),\ r = \min(pos[n], d+g)$
+- 用**单调递减队列**维护窗口内 $dp$ 的最大值，每次入队前弹出下标过期（$< pos[i]-r$）的队首，以及 $dp$ 值不大于新值的队尾
+
+```cpp
+#include<bits/stdc++.h>
+#define int long long
+using namespace std;
+constexpr int inf = 1e18;
+
+signed main(){
+    cin.tie(0)->sync_with_stdio(0);
+    int n,d,k;
+    cin>>n>>d>>k;
+    vector<int> pos(n+1),scr(n+1);
+    int sum = 0;
+    for(int i=1;i<=n;++i){
+        cin>>pos[i]>>scr[i];
+        if(scr[i]>0)sum+=scr[i];
+    }
+    if(sum<k){cout<<-1;return 0;}
+
+    int l=0,r=max(pos[n],d);
+    auto check=[&](int g)->bool{
+        int L=max(1LL,d-g),R=min(pos[n],d+g);
+        vector<int> dp(n+1,-inf);dp[0]=0;
+        deque<int> q;
+        int ptr=0;
+        for(int i=1;i<=n;++i){
+            // 将新可达格子加入单调队列
+            for(;ptr<i&&pos[ptr]<=pos[i]-L;++ptr){
+                if(dp[ptr]==-inf)continue;
+                while(q.size()&&dp[q.back()]<=dp[ptr])q.pop_back();
+                q.push_back(ptr);
+            }
+            // 淘汰过期格子（跳不到 i）
+            while(q.size()&&pos[q.front()]<pos[i]-R)q.pop_front();
+            if(q.size()){
+                dp[i]=scr[i]+dp[q.front()];
+                if(dp[i]>=k)return true;
+            }
+        }
+        return false;
+    };
+
+    while(l<r){
+        int mid=(l+r)>>1;
+        if(check(mid))r=mid;
+        else l=mid+1;
+    }
+    cout<<l;
     return 0;
 }
 ```

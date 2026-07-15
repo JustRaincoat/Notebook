@@ -10,6 +10,9 @@ export_on_save:
 
     **各取所需，祝你愉快**
 
+!!! attention
+    首次加载可能较慢，如出现公式、图表加载错误，请耐心等待浏览器自动加载并缓存。
+
 ## README 文档 README DOCUMENT
 
 1. [Markdown](./README.md)
@@ -38,19 +41,22 @@ export_on_save:
 
 BA&CT: Basic Algorithms & Common Tricks for short，中文译为基础算法和常用技巧。
 
-!!! attention 点击跳转至 BA&CT 选项卡 | Click to index of Basic Algorithms & Common Tricks：
+!!! attention "点击跳转至 BA&CT 选项卡 | Click to index of Basic Algorithms & Common Tricks："
+
     1. [HTML](./BA&CT/index.html)
     2. [Markdown](./BA&CT/index.md)
 
 ## 图论 Graph Theory
 
-!!! attention 点击跳转至图论选项卡 | Click to index of Graph Theory：
+!!! attention "点击跳转至图论选项卡 | Click to index of Graph Theory："
+
     1. [HTML](./图论/index.html)
     2. [Markdown](./图论/index.md)
 
 ## 数据结构 Data Structures
 
-!!! attention 点击跳转至数据结构选项卡 | Click to index of Data Structures：
+!!! attention "点击跳转至数据结构选项卡 | Click to index of Data Structures："
+
     1. [HTML](./数据结构/index.html)
     2. [Markdown](./数据结构/index.md)
 
