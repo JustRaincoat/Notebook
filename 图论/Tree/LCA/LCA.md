@@ -193,39 +193,59 @@ flowchart TD
 **评价**：这一改进使得常数比欧拉序方法更小（在洛谷模板题上仅需 869ms，甚至快于 Tarjan）。它和欧拉序方法共享同一套复杂度框架，但实际运行效率更高，是追求极致查询速度场景下的优选。
 
 ```cpp
-namespace st{
-	int stt[maxn][40];
-	int T(int a,int b){return dept[a]<dept[b]?a:b;}//此处根据实际需求更改 
-	void init(int n,int a[]){
-		for(int i=1;i<=n;i++)stt[i][0] = a[i];
-		for(int j = 1;j <= __lg(n);j++)
-			for(int i=1;i+(1<<j)-1<=n;i++)
-				stt[i][j] = T(stt[i][j-1],stt[i+(1<<(j-1))][j-1]);
-	}
-	int find(int l,int r){
-		register int s = __lg(r-l+1);
-		return T(stt[l][s],stt[r-(1<<s)+1][s]);
-	}
-}
-
-void dfs(int x,int dep,int f){
-	dfn[x] = ++timestamp;
-	dfso[dfn[x]] = x;
-	dept[x] = dep;
-	fa[x] = f;
-	for(auto i:g[x])
-		if(!dfn[i])
-			dfs(i,dep+1,x);
-}
-
-int lca(int a,int b){
-	if(a==b)return a;
-	register int i;
-	if(dfn[a]>dfn[b])i = st::find(dfn[b]+1,dfn[a]);
-	else i = st::find(dfn[a]+1,dfn[b]);
-	return fa[i];
-}
+struct LCA{
+    vec<int> dfn,dfso,dept,fa;
+    vec2<int> st;
+    void build(const vec<int>& x,int n){
+        int m = std::__lg(n);
+        for(int i=1;i<=n;++i)st[i][0] = x[i];
+        for(int j=1;j<=m;++j)
+            for(int i=1;i+(1<<j)-1<=n;++i){
+                int lnode = st[i][j-1],rnode = st[i+(1<<(j-1))][j-1];
+                st[i][j] = dept[lnode]<dept[rnode]?lnode:rnode;
+            }
+    }
+    int query(int L,int R){
+        int z = std::__lg(R-L+1);
+        int lnode = st[L][z],rnode = st[R-(1<<z)+1][z];
+        return dept[lnode]<dept[rnode]?lnode:rnode;
+    }
+    int cnt = 0;
+    void dfs(int u,int f,const vec2<int>& g){
+        dfn[u] = ++cnt;
+        dfso[dfn[u]] = u;
+        fa[u] = f;
+        dept[u] = dept[f] + 1;
+        for(int v:g[u])if(v!=f)dfs(v,u,g);
+    }
+    int find(int a,int b){
+        if(a==b)return a;
+        int l = dfn[a],r = dfn[b];
+        if(l>r)std::swap(l,r);
+        return fa[query(l+1,r)]; // ← +1：排除祖先自身
+    }
+    LCA(int n,const vec2<int>& g){
+        dfn.resize(n+1),dfso.resize(n+1),dept.resize(n+1),fa.resize(n+1);
+        dfs(1,0,g);
+        st.resize(n+1,vec<int>(std::__lg(n)+1,0));
+        build(dfso,n);
+    }
+};
 ```
+
+!!! warning "坑点（+1）"
+    `find` 中 `query` 的区间必须是 `[l+1, r]` 而非 `[l, r]`。
+
+    原因是：当 $a$ 是 $b$ 的祖先时，$[dfn_a, dfn_b]$ 内深度最浅的节点就是 $a$ 自身，`fa[a]` 返回的是 $a$ 的父节点而非 $a$。从 $dfn_a+1$ 开始查询就排除了祖先自身，此时区间内最浅节点的父节点恰好是 LCA。
+
+    例如：
+    ```
+        1 (dfn=1)
+       / \
+    2(dfn=2) 3(dfn=3)
+    ```
+    `lca(1,2)`：区间 `[1,2]` 内最浅是 1，`fa[1]=0` ❌  
+    正确：区间 `[2,2]` 内最浅是 2，`fa[2]=1` ✅
 
 ## 方法六：Tarjan 离线算法
 
