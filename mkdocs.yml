@@ -1,0 +1,122 @@
+site_name: JustRaincoat/Notebook
+site_description: OI 算法笔记
+site_url: https://oi.notebook.justraincoat.top
+repo_url: https://github.com/JustRaincoat/Notebook
+repo_name: JustRaincoat/Notebook
+edit_uri: ""
+
+docs_dir: .
+
+site_dir: /var/www/anki.justraincoat.top
+
+exclude_docs: |
+  /.git/
+  /.vscode/
+  /.crossnote/
+  /icon/
+  /Code/
+  /notebook.json
+  /LICENSE
+  /README.md
+  /README.html
+  /*.html
+  /**/*.html
+  /mkdocs.yml
+
+theme:
+  name: material
+  language: zh
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: 切换亮色模式
+    - scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: 切换暗色模式
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.tabbed:
+      alternate_style: true
+  - footnotes
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - javascripts/mathjax-config.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
+  - javascripts/mermaid.js
+
+plugins:
+  - search
+
+nav:
+  - 首页: index.md
+  - 算法基础:
+      - 二分搜索: BA&CT/BinarySearch/BinarySearch.md
+      - 反悔贪心: BA&CT/RegretGreedy/RegretGreedy.md
+  - 数据结构:
+      - 并查集 DSU: 数据结构/DSU/DSU.md
+      - 线段树: 数据结构/SegmentTree/SegmentTree.md
+      - 稀疏表 ST 表: 数据结构/SparseTable/SparseTable.md
+      - Trie 树: 数据结构/TrieTree/Trie.md
+      - 矩阵: 数据结构/Matrix/Matrix.md
+      - 单调栈: 数据结构/MonotonicStack/MonotonicStack.md
+      - 单调队列: 数据结构/MonotonicQueue/MonotonicQueue.md
+      - 平衡树: 数据结构/BalancedTree/BlancedTree.md
+  - 图论:
+      - 最短路: 图论/ShortestPath/ShortestPath.md
+      - 差分约束: 图论/DiffConstraints/DC.md
+      - 欧拉路: 图论/H&E Path/Euler Path/Euler Path.md
+      - LCA: 图论/Tree/LCA/LCA.md
+      - MST: 图论/Tree/MST/MST.md
+      - 树的直径: 图论/Tree/TreeDiameter/TD.md
+      - 重链剖分 HLD: 图论/Tree/Heavy-Light Decoposition/HLD.md
+      - 强联通分量 SCC: 图论/Connectivity/SCC/SCC.md
+      - 双连通分量 DCC: 图论/Connectivity/DCC/DCC.md
+  - 数论:
+      - 质因数分解: 数论/质因数分解/PrimeFactorization.md
+      - 位运算: 数论/位运算/BitOperator.md
+      - 逆元: 数论/逆元/Inverse.md
+      - 丢番图方程: 数论/丢番图方程/IndeterminateEquation.md
+  - 库:
+      - STL: Libs/STL/STL.md
+      - __gnu_cxx: Libs/EXT/__gnu_cxx/cxx.md
+      - __gnu_pbds: Libs/EXT/__gnu_pbds/pbds.md
+  - 刷题笔记:
+      - P10449 费解的开关: 刷题笔记/P10449 费解的开关/P10449.md
+      - P1450 [HAOI2008] 硬币购物: 刷题笔记/P1450 [HAOI2008] 硬币购物/P1450.md
+      - P1553 数字反转（升级版）: 刷题笔记/P1553 数字反转（升级版）/P1553.md
+      - P1593 因子和: 刷题笔记/P1593 因子和/P1593.md
+      - P1879 [USACO06NOV] Corn Fields G: 刷题笔记/P1879 [USACO06NOV] Corn Fields G/P1879.md
+      - P2114 [NOI2014] 起床困难综合症: 刷题笔记/P2114 [NOI2014] 起床困难综合症/P2114.md
+      - P2827 [NOIP 2016 提高组] 蚯蚓: 刷题笔记/P2827 [NOIP 2016 提高组] 蚯蚓/P2827.md
+      - P7077 [CSP-S 2020] 函数调用: 刷题笔记/P7077 [CSP-S 2020] 函数调用/P7077.md
