@@ -50,6 +50,7 @@ theme:
 
 markdown_extensions:
   - admonition
+  - attr_list
   - pymdownx.details
   - pymdownx.superfences:
       custom_fences:
@@ -71,8 +72,8 @@ markdown_extensions:
 
 extra_javascript:
   - javascripts/mathjax-config.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
+  - assets/mathjax/tex-mml-chtml.js
+  - assets/mermaid.min.js
   - javascripts/mermaid.js
 
 plugins:

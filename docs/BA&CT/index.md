@@ -12,18 +12,18 @@ export_on_save:
 
 ## 返回主页
 
-1. [HTML](../index.html)
-2. [Markdown](../index.md)
+1. [HTML](/)
+2. [Markdown](/)
 
 ## 基础算法 Basic Algorithms 
 
 1. Binary Search 二分搜索
 
-    1. [Markdown](./BinarySearch/BinarySearch.md)
-    2. [HTML](./BinarySearch/BinarySearch.html)
+    1. [Markdown](/BA%26CT/BinarySearch/BinarySearch/)
+    2. [HTML](/BA%26CT/BinarySearch/BinarySearch/)
 
 2. Regret Greedy 反悔贪心
 
-    1. [Markdown](./RegretGreedy/RegretGreedy.md)
-    2. [HTML](./RegretGreedy/RegretGreedy.html)
+    1. [Markdown](/BA%26CT/RegretGreedy/RegretGreedy/)
+    2. [HTML](/BA%26CT/RegretGreedy/RegretGreedy/)
 

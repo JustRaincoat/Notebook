@@ -117,7 +117,7 @@ template<
     - `find_by_order` 与 `order_of_key` 依赖于使用 `tree_order_statistics_node_update` 的声明。 
     - 迭代器失效规则与 STL 容器类似（插入/删除可能影响迭代器）。
 
-#### [**Probelm**](https://www.luogu.com.cn/problem/P3369) - [**Code**](/Code/Luogu_P_3369_模板_普通平衡树.cpp)
+#### [**Probelm**](https://www.luogu.com.cn/problem/P3369) - [**Code**](/Code/viewer.html?file=Luogu_P_3369_%E6%A8%A1%E6%9D%BF_%E6%99%AE%E9%80%9A%E5%B9%B3%E8%A1%A1%E6%A0%91.cpp)
 
 注意和所有平衡树数据结构一样（例如`std::map<>`），这个平衡树也会**去重**，若想保留多个值，可以使用 `std::pair<int,int>`，以此**制造元素之间的差异**。
 

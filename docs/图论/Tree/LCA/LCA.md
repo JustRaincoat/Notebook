@@ -151,8 +151,8 @@ flowchart TD
 **评价**：虽然理论复杂度与倍增法相同，但常数往往更小（跳链比跳 $2^k$ 步更快）。树剖的真正价值在于：它不仅能求 LCA，还是树上路径修改/查询的**万能数据结构**，配合线段树可以处理几乎所有静态或动态的树上路径问题。
 
 代码参见树链剖分章节：
-    1. [HTML](../Heavy-Light%20Decoposition/HLD.html)
-    2. [Markdown](../Heavy-Light%20Decoposition/HLD.md)
+    1. [HTML](/%E5%9B%BE%E8%AE%BA/Tree/Heavy-Light%20Decoposition/HLD/)
+    2. [Markdown](/%E5%9B%BE%E8%AE%BA/Tree/Heavy-Light%20Decoposition/HLD/)
 
 ## 方法四：欧拉序 + ST 表
 

@@ -400,9 +400,9 @@ void pushdown(int k){
 
 ## [Problem](https://www.luogu.com.cn/problem/P13825)
 
-1. [**Code**](/Code/Luogu_P_13825_模板_线段树_1_5.old.cpp)
+1. [**Code**](/Code/viewer.html?file=Luogu_P_13825_%E6%A8%A1%E6%9D%BF_%E7%BA%BF%E6%AE%B5%E6%A0%91_1_5.old.cpp)
     使用数组写法。
-2. [**Code**](/Code/Luogu_P_13825_模板_线段树_1_5.cpp)
+2. [**Code**](/Code/viewer.html?file=Luogu_P_13825_%E6%A8%A1%E6%9D%BF_%E7%BA%BF%E6%AE%B5%E6%A0%91_1_5.cpp)
     使用指针优化写法。在保留原有代码的极高扩展性的情况下使代码时空效率更高。
 
 ## 泛型优化 - 基于 Lambda 表达式的一树多用

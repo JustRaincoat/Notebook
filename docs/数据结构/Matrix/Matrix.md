@@ -46,9 +46,9 @@ struct Matrix{
 
 [P3390 【模板】矩阵快速幂](https://www.luogu.com.cn/problem/P3390)
 
-[Code](/Code/P3390.cpp)
+[Code](/Code/viewer.html?file=P3390.cpp)
 
-## 矩阵加速递推
+## 矩阵加速递推 {#矩阵加速递推}
 
 [P1939 矩阵加速（数列）](https://www.luogu.com.cn/problem/P1939)
 
@@ -86,7 +86,7 @@ $$
 \begin{bmatrix} 1 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}
 $$
 
-[Code](/Code/P1939.cpp)
+[Code](/Code/viewer.html?file=P1939.cpp)
 
 ## 矩阵加速dp
 

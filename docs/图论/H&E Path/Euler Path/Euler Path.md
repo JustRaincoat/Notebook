@@ -196,7 +196,7 @@ cout << ans;
 
 以下代码改编自 [P1341 无序字母对](https://www.luogu.com.cn/problem/P1341) 的解法，完整实现了无向图欧拉路径的判定与求解：
 
-[**完整代码**](/root/Problems/P1341.cpp) <!-- 请将路径改为实际仓库中的相对路径 -->
+[**完整代码**](/Code/viewer.html?file=P1341.cpp) <!-- 请将路径改为实际仓库中的相对路径 -->
 
 ```cpp
 #include <bits/stdc++.h>

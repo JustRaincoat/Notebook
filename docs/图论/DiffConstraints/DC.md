@@ -37,7 +37,7 @@ $$x_i-x_j \leq c_k \Leftrightarrow x_i \le x_j+c_k$$
 >
 > 因为可行解可以任意平移，这些约束条件使得我们找到的是最大值为 $0$ 的一组解，并不影响解的正确性。由此可知，边权为 $0$ 只是一种被人们广泛接受的习惯，实际上它可以为 **任意实数**。赋值成 $0$ 可以帮助人们理解并且避免解超出范围。
 
-## [Code](/Code/P5960.cpp)
+## [Code](/Code/viewer.html?file=P5960.cpp)
 
 Problem : [P5960 【模板】差分约束](https://www.luogu.com.cn/problem/P5960)
 
@@ -53,5 +53,5 @@ Problem : [P5960 【模板】差分约束](https://www.luogu.com.cn/problem/P596
 
 这就用到了差分约束中**解的平移性**，我们可以设，$M = \min_{1 \le i \le n}{T_i}$，这样将每个解**同时减去** $M$，就会得到一组合法的解（最小值等于0）
 
-#### [Code](/Code/P1260.cpp)
+#### [Code](/Code/viewer.html?file=P1260.cpp)
 

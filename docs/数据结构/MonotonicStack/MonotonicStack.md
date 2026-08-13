@@ -160,7 +160,7 @@ while (s.size()) {
 }
 ```
 
-[**Code**](../../Code/P2422.cpp)
+[**Code**](/Code/viewer.html?file=P2422.cpp)
 
 !!! tip 总结
 

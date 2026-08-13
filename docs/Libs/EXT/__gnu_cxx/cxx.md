@@ -89,4 +89,4 @@ rope 最初是作为字符串的存储结构，对**字符类型**有优化 `cro
     3. **不适合**：只有随机访问需求的场景（用 `std::string` 更好）
 
 
-## [Problem](https://www.luogu.com.cn/problem/P3391) - [Code](/Code/Luogu_P_3391_模板_文艺平衡树.cpp)
+## [Problem](https://www.luogu.com.cn/problem/P3391) - [Code](/Code/viewer.html?file=Luogu_P_3391_%E6%A8%A1%E6%9D%BF_%E6%96%87%E8%89%BA%E5%B9%B3%E8%A1%A1%E6%A0%91.cpp)

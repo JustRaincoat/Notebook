@@ -12,42 +12,42 @@ export_on_save:
 
 ## 返回主页
 
-1. [HTML](../index.html)
-2. [Markdown](../index.md)
+1. [HTML](/)
+2. [Markdown](/)
 
 ## Data Structures数据结构
 
 1. DSU 并查集
 
-    1. [Markdown](./DSU/DSU.md)
-    2. [HTML](./DSU/DSU.html)
+    1. [Markdown](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/DSU/DSU/)
+    2. [HTML](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/DSU/DSU/)
 
 2. Segment Tree 线段树
 
-    1. [Markdown](./SegmentTree/SegmentTree.md)
-    2. [HTML](./SegmentTree/SegmentTree.html)
+    1. [Markdown](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/SegmentTree/SegmentTree/)
+    2. [HTML](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/SegmentTree/SegmentTree/)
 
 3. Sparse Table 稀疏表
 
-    1. [Markdown](./SparseTable/SparseTable.md)
-    2. [HTML](./SparseTable/SparseTable.html)
+    1. [Markdown](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/SparseTable/SparseTable/)
+    2. [HTML](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/SparseTable/SparseTable/)
 
 4. TrieTree 字典树
 
-    1. [Markdown](./TrieTree/Trie.md)
-    2. [HTML](./TrieTree/Trie.html)
+    1. [Markdown](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/TrieTree/Trie/)
+    2. [HTML](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/TrieTree/Trie/)
 
 5. Matrix 矩阵
 
-    1. [Markdown](./Matrix/Matrix.md)
-    2. [HTML](./Matrix/Matrix.html)
+    1. [Markdown](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/Matrix/Matrix/)
+    2. [HTML](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/Matrix/Matrix/)
 
 6. Monotonic Stack 单调栈
 
-    1. [Markdown](./MonotonicStack/MonotonicStack.md)
-    2. [HTML](./MonotonicStack/MonotonicStack.html)
+    1. [Markdown](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/MonotonicStack/MonotonicStack/)
+    2. [HTML](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/MonotonicStack/MonotonicStack/)
 
 7. Monotonic Queue 单调队列
 
-    1. [Markdown](./MonotonicQueue/MonotonicQueue.md)
-    2. [HTML](./MonotonicQueue/MonotonicQueue.html)
+    1. [Markdown](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/MonotonicQueue/MonotonicQueue/)
+    2. [HTML](/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/MonotonicQueue/MonotonicQueue/)

@@ -191,7 +191,7 @@ void Add(int _u, int _v, int w, HLDT &t) {
 
 在树上进行大规模的操作，适合使用 HLD 解决。题目要求输出影响的软件包数量，可以想到把每个节点的状态映射到 HLD 的基数组上，通过查询**全局和**来统计受影响的软件包数量。
 
-[**参考代码**](/Code/Luogu_P_2146_NOI_2015_软件包管理器.cpp)
+[**参考代码**](/Code/viewer.html?file=Luogu_P_2146_NOI_2015_%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8.cpp)
 
 ### [Luogu P4315 月下毛景树](https://www.luogu.com.cn/problem/P4315)
 
@@ -202,7 +202,7 @@ void Add(int _u, int _v, int w, HLDT &t) {
 !!! Attention 特别注意
     这样转换点权之后，两个节点的 $LCA$ 的点权需要排除。因为 $LCA$ 的点权其实是 $LCA$ 与其父节点的边的边权，并不在 $u \rightarrow v$ 的路径上。
 
-[**参考代码**](/Code/Luogu_P_4315_月下_毛景树.cpp)
+[**参考代码**](/Code/viewer.html?file=Luogu_P_4315_%E6%9C%88%E4%B8%8B_%E6%AF%9B%E6%99%AF%E6%A0%91.cpp)
 
 
 ### [P3976 [TJOI2015] 旅游](https://www.luogu.com.cn/problem/P3976)
@@ -257,4 +257,4 @@ void Add(int _u, int _v, int w, HLDT &t) {
     !!! Attention
         在进行区间查询时，**上行方向**（即 u->LCA）需要翻转（因为 dfn 从小到大是从上往下走的），而**下行方向**（即 LCA->v）无需翻转（因为 dfn 从小到大也是从上往下走的）。因此在合并信息时，上行方向需要翻转 msg 的 a、b、c、d 的位置，而下行方向则不需要。
 
-[**参考代码**](/Code/Luogu_P_3976_TJOI_2015_旅游.cpp)
+[**参考代码**](/Code/viewer.html?file=Luogu_P_3976_TJOI_2015_%E6%97%85%E6%B8%B8.cpp)
