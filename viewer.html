@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>查看 - JustRaincoat/Notebook</title>
+<link rel="stylesheet" href="/assets/github-markdown.min.css">
+<style>
+  body { margin:0; font-family: system-ui,-apple-system,sans-serif; background:#f6f8fa; }
+  .bar {
+    position: sticky; top:0; z-index:10; background:#24292f; color:#fff;
+    padding:10px 16px; display:flex; gap:14px; align-items:center;
+    font-size:14px; box-shadow:0 1px 3px rgba(0,0,0,.3);
+  }
+  .bar a { color:#58a6ff; text-decoration:none; white-space:nowrap; }
+  .bar a:hover { text-decoration:underline; }
+  #fname { flex:1; color:#c9d1d9; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .btn {
+    background:#30363d; color:#fff; border:1px solid #484f58;
+    padding:5px 14px; border-radius:6px; cursor:pointer; font-size:13px;
+    text-decoration:none; white-space:nowrap;
+  }
+  .btn:hover { background:#3d444d; text-decoration:none; }
+  #copy { background:#238636; border-color:#2ea043; }
+  #copy:hover { background:#2ea043; }
+  .container { max-width: 960px; margin: 24px auto; padding: 0 16px; }
+  .markdown-body { background:#fff; border:1px solid #d0d7de; border-radius:8px; padding:32px 40px; }
+  pre.raw {
+    background:#0d1117; color:#e6edf3; padding:20px; border-radius:8px;
+    overflow-x:auto; font-family: ui-monospace,Consolas,monospace; font-size:13.5px;
+    line-height:1.6; tab-size:4; white-space:pre; margin:0;
+  }
+  #err { padding:60px 20px; text-align:center; color:#cf222e; font-size:16px; }
+  .markdown-body pre code.hljs { background:transparent; padding:0; }
+  .markdown-body pre { position:relative; }
+  @media (max-width: 640px) {
+    .markdown-body { padding: 16px; }
+    .container { margin: 12px auto; }
+    .bar { gap:8px; font-size:13px; }
+  }
+</style>
+</head>
+<body>
+<div class="bar">
+  <a href="/">← 首页</a>
+  <a href="/Code/index.html">代码库</a>
+  <span id="fname"></span>
+  <a class="btn" id="rawlink" href="#" target="_blank" rel="noopener">Raw</a>
+  <button class="btn" id="copy" style="display:none">复制</button>
+</div>
+<div class="container">
+  <div id="err" style="display:none"></div>
+  <div id="md" class="markdown-body" style="display:none"></div>
+  <pre id="raw" class="raw" style="display:none"></pre>
+</div>
+
+<script src="/javascripts/mathjax-config.js"></script>
+<script src="/assets/mathjax/tex-mml-chtml.js" id="MathJax-script"></script>
+<script src="/assets/marked.min.js"></script>
+<script src="/assets/highlight.min.js"></script>
+<script src="/assets/mermaid.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var params = new URLSearchParams(location.search);
+  var file = params.get('file');
+  var isRaw = params.has('raw');
+  var errEl = document.getElementById('err');
+  var mdEl = document.getElementById('md');
+  var rawEl = document.getElementById('raw');
+  var copyBtn = document.getElementById('copy');
+  var rawLink = document.getElementById('rawlink');
+  var fnameEl = document.getElementById('fname');
+
+  if (!file) { showErr('未指定文件参数 (?file=xxx.md 或 ?file=Code/xxx.cpp)'); return; }
+
+  fnameEl.textContent = file;
+  rawLink.href = '/viewer.html?file=' + encodeURIComponent(file) + '&raw=1';
+
+  fetch(encodeURI(file)).then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.text();
+  }).then(function (text) {
+    if (isRaw) {
+      rawEl.textContent = text;
+      rawEl.style.display = 'block';
+      copyBtn.style.display = 'inline-block';
+      copyBtn.onclick = function () { copyText(text); };
+      document.title = file + ' (raw) - Notebook';
+      return;
+    }
+    if (/\.md$/i.test(file)) {
+      renderMarkdown(text, file);
+    } else if (/\.(cpp|cc|c|h|hpp|py|java|txt|json|yml|yaml|sh|js)$/i.test(file)) {
+      rawEl.textContent = text;
+      rawEl.style.display = 'block';
+      copyBtn.style.display = 'inline-block';
+      copyBtn.onclick = function () { copyText(text); };
+      // 代码高亮
+      var lang = langOf(file);
+      rawEl.className = 'raw hljs';
+      if (lang && hljs.getLanguage(lang)) {
+        rawEl.innerHTML = hljs.highlight(text, { language: lang, ignoreIllegals: true }).value;
+      }
+      document.title = file + ' - Notebook';
+    } else {
+      rawEl.textContent = text;
+      rawEl.style.display = 'block';
+      copyBtn.style.display = 'inline-block';
+      copyBtn.onclick = function () { copyText(text); };
+    }
+  }).catch(function (e) {
+    showErr('无法加载文件 ' + file + '（' + e.message + '）');
+  });
+
+  function renderMarkdown(text, file) {
+    // 图片相对路径修正：基于 md 所在目录
+    var dir = file.replace(/[^/]*$/, '');
+    marked.use({
+      renderer: {
+        image: function (token) {
+          var href = token.href || '';
+          var alt = token.text || '';
+          if (!/^(https?:|data:|#|\/)/.test(href)) {
+            href = '/' + encodeURI(dir + href);
+          }
+          return '<img src="' + href + '" alt="' + alt + '"' +
+                 (token.title ? ' title="' + token.title + '"' : '') + '>';
+        },
+        link: function (token) {
+          var href = token.href || '';
+          var text = token.text || '';
+          if (/^#/.test(href) || /^(https?:|mailto:|javascript:)/.test(href)) {
+            return '<a href="' + href + '">' + text + '</a>';
+          }
+          if (href.indexOf('/viewer.html') !== 0) {
+            href = '/viewer.html?file=' + encodeURIComponent(href);
+          }
+          return '<a href="' + href + '">' + text + '</a>';
+        }
+      }
+    });
+    var html = marked.parse(text, { gfm: true, breaks: false });
+    mdEl.innerHTML = html;
+
+    // mermaid 块：转成 div.mermaid
+    var mermaidBlocks = mdEl.querySelectorAll('pre code.language-mermaid');
+    if (mermaidBlocks.length) {
+      mermaidBlocks.forEach(function (code) {
+        var div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        code.parentNode.parentNode.replaceChild(div, code.parentNode);
+      });
+      if (window.mermaid) {
+        mermaid.initialize({ startOnLoad: false, theme: 'default' });
+        mermaid.run({ querySelector: '.mermaid' });
+      }
+    }
+
+    // 代码块高亮
+    mdEl.querySelectorAll('pre code').forEach(function (code) {
+      if (code.classList.contains('language-mermaid')) return;
+      var lang = '';
+      code.classList.forEach(function (c) {
+        if (c.indexOf('language-') === 0) lang = c.slice(9);
+      });
+      if (lang && hljs.getLanguage(lang)) {
+        try { code.innerHTML = hljs.highlight(code.textContent, { language: lang, ignoreIllegals: true }).value; } catch (e) {}
+      } else {
+        try { code.innerHTML = hljs.highlightAuto(code.textContent).value; } catch (e) {}
+      }
+      code.classList.add('hljs');
+    });
+
+    mdEl.style.display = 'block';
+    copyBtn.style.display = 'inline-block';
+    copyBtn.onclick = function () { copyText(mdEl.innerText); };
+
+    // MathJax 重排
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise([mdEl]).catch(function () {});
+    }
+
+    // 锚点跳转
+    if (location.hash) {
+      var target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (target) target.scrollIntoView();
+    }
+    document.title = file + ' - Notebook';
+  }
+
+  function langOf(f) {
+    var m = f.match(/\.([^.]+)$/);
+    if (!m) return '';
+    var map = { cpp: 'cpp', cc: 'cpp', c: 'c', h: 'cpp', hpp: 'cpp', py: 'python',
+                java: 'java', txt: 'plaintext', json: 'json', yml: 'yaml', yaml: 'yaml',
+                sh: 'bash', js: 'javascript' };
+    return map[m[1]] || m[1];
+  }
+
+  function copyText(t) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(function () {
+        copyBtn.textContent = '已复制';
+        setTimeout(function () { copyBtn.textContent = '复制'; }, 1500);
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = t; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      copyBtn.textContent = '已复制';
+      setTimeout(function () { copyBtn.textContent = '复制'; }, 1500);
+    }
+  }
+
+  function showErr(msg) {
+    errEl.textContent = msg;
+    errEl.style.display = 'block';
+  }
+})();
+</script>
+</body>
+</html>
