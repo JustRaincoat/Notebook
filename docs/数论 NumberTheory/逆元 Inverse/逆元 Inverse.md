@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 逆元
 
 ## 定义

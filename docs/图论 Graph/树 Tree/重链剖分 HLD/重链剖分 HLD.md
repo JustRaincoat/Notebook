@@ -1,7 +1,3 @@
----
-export_on_save:
-  html: true
----
 # Heavy-Light Decoposition 重链剖分
 
 ## 什么是重链剖分？

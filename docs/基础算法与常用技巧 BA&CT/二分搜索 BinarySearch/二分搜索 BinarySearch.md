@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 !!! attention AI 创作声明
     本文档由 Gemini v3.5 Flash 协助生成，旨在提供二分算法的核心思想、模板和实战技巧。虽然经过人工审核，但仍可能存在不准确或不完整的内容。
 

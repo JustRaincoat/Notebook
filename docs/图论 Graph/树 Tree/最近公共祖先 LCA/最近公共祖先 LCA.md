@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 最近公共祖先 LCA
 
 ## 什么是 LCA
@@ -151,7 +146,7 @@ flowchart TD
 **评价**：虽然理论复杂度与倍增法相同，但常数往往更小（跳链比跳 $2^k$ 步更快）。树剖的真正价值在于：它不仅能求 LCA，还是树上路径修改/查询的**万能数据结构**，配合线段树可以处理几乎所有静态或动态的树上路径问题。
 
 代码参见树链剖分章节：
-    1. [HTML](/viewer.html?file=%E5%9B%BE%E8%AE%BA%20Graph/%E6%A0%91%20Tree/%E9%87%8D%E9%93%BE%E5%89%96%E5%88%86%20HLD/%E9%87%8D%E9%93%BE%E5%89%96%E5%88%86%20HLD.md)
+    1. [HTML](/图论%20Graph/树%20Tree/重链剖分%20HLD/重链剖分%20HLD/)
     2. [Markdown](/viewer.html?file=%E5%9B%BE%E8%AE%BA%20Graph/%E6%A0%91%20Tree/%E9%87%8D%E9%93%BE%E5%89%96%E5%88%86%20HLD/%E9%87%8D%E9%93%BE%E5%89%96%E5%88%86%20HLD.md)
 
 ## 方法四：欧拉序 + ST 表

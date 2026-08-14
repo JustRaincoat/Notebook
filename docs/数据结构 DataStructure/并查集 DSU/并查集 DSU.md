@@ -1,7 +1,3 @@
----
-export_on_save:
-  html: true
----
 # 并查集（DSU）
 
 用于快速判断元素是否属于同一个集合。

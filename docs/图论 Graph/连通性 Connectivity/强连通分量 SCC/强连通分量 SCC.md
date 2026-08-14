@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 强联通分量（SCC）—— Tarjan
 
 ## 定义

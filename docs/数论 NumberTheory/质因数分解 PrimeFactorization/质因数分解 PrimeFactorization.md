@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 质因数分解
 
 ## 方案一

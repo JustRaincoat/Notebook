@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 平衡树 Rope
 
 !!! quote 该部分创作声明

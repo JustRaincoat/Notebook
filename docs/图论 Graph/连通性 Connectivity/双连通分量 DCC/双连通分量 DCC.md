@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 双连通分量（DCC）——Tarjan
 
 ## 原理

@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 平衡树
 
 ## Preface

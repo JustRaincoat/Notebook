@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # STL容器成员函数速查表
 
 ## 一、序列容器

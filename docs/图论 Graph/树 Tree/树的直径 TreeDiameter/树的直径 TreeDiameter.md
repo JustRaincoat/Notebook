@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 树的直径
 
 ## 定义

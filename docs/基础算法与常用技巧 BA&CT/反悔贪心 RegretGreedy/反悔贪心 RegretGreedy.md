@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 反悔贪心（Regret Greedy）
 
 ## 一、动机与背景

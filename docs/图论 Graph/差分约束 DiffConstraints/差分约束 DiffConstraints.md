@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 差分约束
 
 ## 定义

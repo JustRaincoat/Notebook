@@ -1,8 +1,3 @@
----
-export_on_save:
-  html: true
----
-
 # 线段树
 
 ## 问题
