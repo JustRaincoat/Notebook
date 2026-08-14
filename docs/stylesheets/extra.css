@@ -1,0 +1,24 @@
+/* 顶栏公告：浅色调提示条 */
+.md-banner {
+  background: #fff8e1;      /* 浅暖黄 */
+  color: #5d4037;           /* 深棕文字 */
+  border-bottom: 1px solid #f0e0a0;
+}
+
+.md-banner__inner {
+  color: inherit;
+}
+
+.md-banner__inner a,
+.md-banner__inner kbd {
+  color: inherit;
+}
+
+.md-banner__button {
+  color: inherit;
+  opacity: .7;
+}
+.md-banner__button:hover {
+  opacity: 1;
+  background: rgba(93, 64, 55, .08);
+}
