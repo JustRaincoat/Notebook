@@ -1,0 +1,9 @@
+nav:
+  - index.md
+  - CHANGELOG.md
+  - 基础算法与常用技巧 BA&CT
+  - 数据结构 DataStructure
+  - 图论 Graph
+  - 数论 NumberTheory
+  - 库 Libs
+  - 刷题笔记 ProblemSet

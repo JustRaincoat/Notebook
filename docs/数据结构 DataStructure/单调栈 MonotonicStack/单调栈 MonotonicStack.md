@@ -1,4 +1,4 @@
-# 单调栈
+# 单调栈 MonotonicStack
 
 单调栈（Monotonic Stack）是一种栈内元素**单调递增**或**单调递减**的栈结构。用于解决**寻找下一个更大（或更小）元素**的一类问题，典型应用包括：柱状图中最大矩形、接雨水、每日温度等。
 
@@ -155,7 +155,7 @@ while (s.size()) {
 }
 ```
 
-[**Code**](/Code/viewer.html?file=P2422.cpp)
+[**Code**](/viewer.html?file=P2422.cpp)
 
 !!! tip 总结
 

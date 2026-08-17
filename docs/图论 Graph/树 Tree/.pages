@@ -1,0 +1,6 @@
+title: 树 Tree
+nav:
+  - 最近公共祖先 LCA
+  - 最小生成树 MST
+  - 树的直径 TreeDiameter
+  - 重链剖分 HLD

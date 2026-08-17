@@ -1,4 +1,4 @@
-# 最短路算法
+# 最短路 ShortestPath
 
 ## Introduction
 
@@ -68,7 +68,7 @@ A <--> |可由左侧关系推出|C
 
 [**Problem**](https://www.luogu.com.cn/problem/B3611)可以帮助你更好的理解它的实际意义。
 
-[**Code**](/Code/viewer.html?file=B3611.cpp)
+[**Code**](/viewer.html?file=B3611.cpp)
 
 既然我们已经可以判定两点之间是否可达，我们尝试更近一步推出两点之间的最短路。
 
@@ -95,7 +95,7 @@ Floyd-Warshall 是解决**全源最短路径 (APSP)** 问题的经典算法。
 
 Problem : [P1119 灾后重建](https://www.luogu.com.cn/problem/P1119)
 
-Code : [**Code**](/Code/viewer.html?file=P1119.cpp)
+Code : [**Code**](/viewer.html?file=P1119.cpp)
 
 ## SPFA（BellmanFord + 队列优化） {#SPFA}
 
@@ -109,7 +109,7 @@ Code : [**Code**](/Code/viewer.html?file=P1119.cpp)
 
 初始时源点 $dis_{root}$ 为 $0$，其它点 $dis_i = inf$。
 
-[**Code**](/Code/viewer.html?file=BellmanFord.cpp)
+[**Code**](/viewer.html?file=BellmanFord.cpp)
 
 ### SPFA
 
@@ -160,7 +160,7 @@ void spfa(int s){
 }
 ```
 
-[**Complete Code**](/Code/viewer.html?file=P3371.cpp)
+[**Complete Code**](/viewer.html?file=P3371.cpp)
 
 Problem : [P3371 【模板】单源最短路径（弱化版）](https://www.luogu.com.cn/problem/P3371)
 
@@ -236,7 +236,7 @@ namespace Graph {
 
 每次取出最短路最小的节点，避免枚举查找。
 
-[**Code**](/Code/viewer.html?file=P4779.cpp)
+[**Code**](/viewer.html?file=P4779.cpp)
 
 注意这里使用了vis数组进行判断，实际上我们可以不使用vis数组，直接判断**存储的**最短路是否和**现存的**最短路相等（判断最短路信息是否已经**过期**）。
 
@@ -326,7 +326,7 @@ Johnson 算法的精妙之处在于它**巧妙地结合了 Bellman-Ford 算法�
      - 这个公式直接来自 $w'(p) = w(p) + h(u) - h(v)$ 的推广。因为 $\delta'(u, v)$ 是 $G'$ 中从 $u$ 到 $v$ 的最小 $w'$ 值，$\delta(u, v)$ 是 $G$ 中从 $u$ 到 $v$ 的最小 $w$ 值，它们之间的关系就是 $\delta'(u, v) = \delta(u, v) + h(u) - h(v)$。移项即得还原公式。
 
 
-### [Code](/Code/viewer.html?file=P5905.cpp)
+### [Code](/viewer.html?file=P5905.cpp)
 
 Problem : [P5905 【模板】全源最短路（Johnson）](https://www.luogu.com.cn/problem/P5905)
 
@@ -355,13 +355,13 @@ Problem : [P5905 【模板】全源最短路（Johnson）](https://www.luogu.com
 
 代码实现中要特别关注是否为严格次短路。
 
-[Problem:P2865 [USACO06NOV] Roadblocks G](https://www.luogu.com.cn/problem/P2865) - [Code:link](/Code/viewer.html?file=P2865.cpp)
+[Problem:P2865 [USACO06NOV] Roadblocks G](https://www.luogu.com.cn/problem/P2865) - [Code:link](/viewer.html?file=P2865.cpp)
 
 ### 删边法（路径）
 
 次短路的边至少有一条不与最短路相同，因此可以每次禁用最短路上的一条边来强制 dijkstra 选择第二短的路。
 
-[Problem:P1491 集合位置](https://www.luogu.com.cn/problem/P1491) - [Code:link](/Code/viewer.html?file=P1491.cpp)
+[Problem:P1491 集合位置](https://www.luogu.com.cn/problem/P1491) - [Code:link](/viewer.html?file=P1491.cpp)
 
 ## Application {#Application}
 

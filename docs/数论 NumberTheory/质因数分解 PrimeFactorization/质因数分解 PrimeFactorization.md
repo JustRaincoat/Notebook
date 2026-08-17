@@ -1,4 +1,4 @@
-# 质因数分解
+# 质因数分解 PrimeFactorization
 
 ## 方案一
 

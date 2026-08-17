@@ -1,0 +1,10 @@
+title: 数据结构
+nav:
+  - 并查集 DSU
+  - 线段树 SegmentTree
+  - 稀疏表 SparseTable
+  - 字典树 TrieTree
+  - 矩阵 Matrix
+  - 单调栈 MonotonicStack
+  - 单调队列 MonotonicQueue
+  - 平衡树 BalancedTree

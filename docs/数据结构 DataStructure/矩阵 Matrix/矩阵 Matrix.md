@@ -1,4 +1,4 @@
-# 矩阵
+# 矩阵 Matrix
 
 用于快速进行**递推**，常与快速幂结合使用。
 
@@ -41,7 +41,7 @@ struct Matrix{
 
 [P3390 【模板】矩阵快速幂](https://www.luogu.com.cn/problem/P3390)
 
-[Code](/Code/viewer.html?file=P3390.cpp)
+[Code](/viewer.html?file=P3390.cpp)
 
 ## 矩阵加速递推 {#矩阵加速递推}
 
@@ -81,7 +81,7 @@ $$
 \begin{bmatrix} 1 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}
 $$
 
-[Code](/Code/viewer.html?file=P1939.cpp)
+[Code](/viewer.html?file=P1939.cpp)
 
 ## 矩阵加速dp
 

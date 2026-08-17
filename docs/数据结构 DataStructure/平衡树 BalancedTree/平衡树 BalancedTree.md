@@ -1,4 +1,4 @@
-# 平衡树
+# 平衡树 BalancedTree
 
 ## Preface
 

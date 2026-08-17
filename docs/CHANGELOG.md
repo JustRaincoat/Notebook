@@ -28,7 +28,7 @@
 ## v2.0.5 — 2026-08-13
 
 - 修复全部悬空链接（md/cpp 链接 404）
-- 新增 `Code/viewer.html` 纯文本代码查看页与 `Code/index.html` 代码列表
+- 新增 `viewer.html` 纯文本代码查看页与 `Code/index.html` 代码列表
 - 新增 `build.sh` 一键构建脚本（mkdocs build + Code 复制 + 悬空扫描）
 - 修复 MathJax 公式渲染：CDN 加载超时 → 本地化 mathjax 3 + mermaid
 - 修复 4 处标题缺少显式锚点的问题

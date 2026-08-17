@@ -1,3 +1,3 @@
-# 丢番图方程（一元不定方程）
+# 丢番图方程 IndeterminateEquation
 
 待补充

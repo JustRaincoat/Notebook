@@ -83,47 +83,5 @@ extra_css:
 
 plugins:
   - search
-
-nav:
-  - 首页: index.md
-  - 更新日志: CHANGELOG.md
-  - 算法基础:
-      - 二分搜索 BinarySearch: 基础算法与常用技巧 BA&CT/二分搜索 BinarySearch/二分搜索 BinarySearch.md
-      - 反悔贪心 RegretGreedy: 基础算法与常用技巧 BA&CT/反悔贪心 RegretGreedy/反悔贪心 RegretGreedy.md
-  - 数据结构:
-      - 并查集 DSU: 数据结构 DataStructure/并查集 DSU/并查集 DSU.md
-      - 线段树 SegmentTree: 数据结构 DataStructure/线段树 SegmentTree/线段树 SegmentTree.md
-      - 稀疏表 ST 表: 数据结构 DataStructure/稀疏表 SparseTable/稀疏表 SparseTable.md
-      - Trie 树: 数据结构 DataStructure/字典树 TrieTree/字典树 TrieTree.md
-      - 矩阵 Matrix: 数据结构 DataStructure/矩阵 Matrix/矩阵 Matrix.md
-      - 单调栈 MonotonicStack: 数据结构 DataStructure/单调栈 MonotonicStack/单调栈 MonotonicStack.md
-      - 单调队列 MonotonicQueue: 数据结构 DataStructure/单调队列 MonotonicQueue/单调队列 MonotonicQueue.md
-      - 平衡树 BalancedTree: 数据结构 DataStructure/平衡树 BalancedTree/平衡树 BalancedTree.md
-  - 图论:
-      - 最短路 ShortestPath: 图论 Graph/最短路 ShortestPath/最短路 ShortestPath.md
-      - 差分约束 DiffConstraints: 图论 Graph/差分约束 DiffConstraints/差分约束 DiffConstraints.md
-      - 欧拉路径 Euler Path: 图论 Graph/欧拉与哈密顿路径 H&E Path/欧拉路径 Euler Path/欧拉路径 Euler Path.md
-      - 最近公共祖先 LCA: 图论 Graph/树 Tree/最近公共祖先 LCA/最近公共祖先 LCA.md
-      - 最小生成树 MST: 图论 Graph/树 Tree/最小生成树 MST/最小生成树 MST.md
-      - 树的直径 TreeDiameter: 图论 Graph/树 Tree/树的直径 TreeDiameter/树的直径 TreeDiameter.md
-      - 重链剖分 HLD: 图论 Graph/树 Tree/重链剖分 HLD/重链剖分 HLD.md
-      - 强连通分量 SCC: 图论 Graph/连通性 Connectivity/强连通分量 SCC/强连通分量 SCC.md
-      - 双连通分量 DCC: 图论 Graph/连通性 Connectivity/双连通分量 DCC/双连通分量 DCC.md
-  - 数论:
-      - 质因数分解 PrimeFactorization: 数论 NumberTheory/质因数分解 PrimeFactorization/质因数分解 PrimeFactorization.md
-      - 位运算 BitOperator: 数论 NumberTheory/位运算 BitOperator/位运算 BitOperator.md
-      - 逆元 Inverse: 数论 NumberTheory/逆元 Inverse/逆元 Inverse.md
-      - 丢番图方程 IndeterminateEquation: 数论 NumberTheory/丢番图方程 IndeterminateEquation/丢番图方程 IndeterminateEquation.md
-  - 库:
-      - 标准模板库 STL: 库 Libs/标准模板库 STL/标准模板库 STL.md
-      - __gnu_cxx: 库 Libs/扩展 EXT/__gnu_cxx/平衡树 Rope.md
-      - __gnu_pbds: 库 Libs/扩展 EXT/__gnu_pbds/PBDS.md
-  - 刷题笔记:
-      - 费解的开关 P10449: 刷题笔记 ProblemSet/费解的开关 P10449/费解的开关 P10449.md
-      - 硬币购物 P1450: 刷题笔记 ProblemSet/硬币购物 P1450/硬币购物 P1450.md
-      - 数字反转 P1553: 刷题笔记 ProblemSet/数字反转 P1553/数字反转 P1553.md
-      - 因子和 P1593: 刷题笔记 ProblemSet/因子和 P1593/因子和 P1593.md
-      - 玉米田 Corn Fields P1879: 刷题笔记 ProblemSet/玉米田 Corn Fields P1879/玉米田 Corn Fields P1879.md
-      - 起床困难综合症 P2114: 刷题笔记 ProblemSet/起床困难综合症 P2114/起床困难综合症 P2114.md
-      - 蚯蚓 P2827: 刷题笔记 ProblemSet/蚯蚓 P2827/蚯蚓 P2827.md
-      - 函数调用 P7077: 刷题笔记 ProblemSet/函数调用 P7077/函数调用 P7077.md
+  - awesome-pages:
+      collapse_single_pages: true
