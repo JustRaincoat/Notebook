@@ -2,6 +2,15 @@
 
 > 本文件由 README 的 Update Log 整理而来，并持续补充。格式：`版本号 日期 - 说明`。
 
+## v2.2.0 — 2026-08-17 新增 CSP 第一轮通关指南
+
+- 新增「CSP第一轮通关指南 R1Passport」系列笔记（`docs/基础算法与常用技巧 BA&CT/CSP第一轮通关指南 R1Passport/`）：
+  - 《普及组 Junior.md》：CSP-J 第一轮（初赛）高频考点总结与经验之谈——考试结构、计算机基础、C++ 语法细节、数据结构、算法、数学，附易错坑点（warning）与考前速查清单
+  - 《提高组 Senior.md》：CSP-S 第一轮（初赛）高频考点总结与经验之谈——复杂度分析、STL 陷阱、数据结构、图论算法、字符串、动态规划、数学，附考前速查清单
+- 考点覆盖 NOI 大纲（2025 年修订版）、CSP-J/S 2025 真题，以及洛谷 SCP2025、SCP2026 模拟赛三路来源
+- 更新 `.gitignore`：忽略 `.vscode`、`.workbuddy` 本地目录
+- 移除 `.crossnote/` 旧配置（config.js / head.html / parser.js / style.less）
+
 ## v2.1.0 — 2026-08-14 全站重构
 
 - 全站文件/目录统一为「中文 英文」命名（如 `图论 Graph/树 Tree/最近公共祖先 LCA/最近公共祖先 LCA.md`）
