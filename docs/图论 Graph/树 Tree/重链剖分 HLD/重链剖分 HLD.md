@@ -38,59 +38,79 @@
 ## 代码模板
 
 ```cpp
+//依赖别名：
+//template<typename T1,typename T2>using map = __gnu_pbds::gp_hash_table<T1,T2>;//pbds 哈希表
+//template<typename T>using vec = std::vector<T>;
+//template<typename T>using vec2 = vec<vec<T>>;
 struct HLDT{//Heavy-Light Decomposed Tree
-    const vec2<> &g;//树的邻接表 the adjacency list of the tree
     struct Node{//树中的每个节点 each node in the tree
-        int id;//该节点的编号 idenity
-        int faid;//该节点的父节点编号 father idenity
-        Node* fa;//该节点的父节点 father
-        /*特别的，对于根节点 fa = nullptr faid = 0 */
+        using ctrl = map<int,Node*>;//Id 控制器类型 id-controller
+        int id;//该节点的编号 identity
+        int faid;//该节点的父节点编号 father identity
+        int sz;//该节点的子树大小 size
         int dept;//该节点深度 depth
-        int siz;//该节点的子树大小 size
+        int dfn;//该节点的 dfs 序号 DFS_number
+        Node* fa;//该节点的父节点 father
         Node* hs;//该节点的重儿子 heavy_son
-        int dfn;//该节点的dfs序号 DFS_number
         Node* top;//该节点所属的重链的 top 节点
-        std::vector<Node*> s;//该节点的所有儿子 son
-        Node(Node* u,int _id,auto& m){//新建一个编号为_id的节点，指定u为他的父节点，自动添加 id 映射
-            id = _id,dept = u->dept + 1,fa = u,faid = u->id,siz = 1,hs = nullptr,top = nullptr,dfn = 0;m[_id] = this;
-            u->s.push_back(this);//把该节点加入到父节点的儿子队列中
+        vec<Node*> ch;//该节点的所有儿子 children
+        Node(Node* f,int _id,ctrl& c){//新建一个编号为 _id 的节点，指定 f 为它的父节点，自动添加 id 映射
+            id = _id,faid = f->id,sz = 1,dept = f->dept + 1,dfn = 0,fa = f,hs = nullptr,top = nullptr;
+            c[id] = this;
+            f->ch.push_back(this);//把该节点加入到父节点的儿子队列中
         }
-        Node(auto& m){id = 0,dept = 0,fa = nullptr,faid = 0,siz = 1,hs = nullptr,top = nullptr,dfn = 0;m[id] = this;}//新建root
+        Node(int _id,ctrl& c){//新建根节点：fa = nullptr,faid = 0，top 指向自身
+            id = _id,faid = 0,sz = 1,dept = 0,dfn = 0,fa = nullptr,hs = nullptr,top = this;
+            c[id] = this;
+        }
     };
-    Node* root;
-    std::unordered_map<int,Node*> idc;//Id 控制器 id-controller
+    const int n;//节点个数
+    const vec2<int>& g;//树的邻接表 the adjacency list of the tree
+    std::deque<Node> pool;//内存池：deque 的 push_back 不会使已有元素的指针失效
     int time = 0;//用于创建 DFN 的时间戳
-    void dfs_build(Node* u){
-        int heavy=0;
-        for(const int v:g[u->id]){
-            if(v == u->faid)continue;//不走回头路
-            Node *vp = new Node(u,v,idc);//指向子节点的指针 v-pointer
+    Node::ctrl idc;//Id 控制器 id-controller
+    Node* root;
+    Node* newNode(Node* f,int _id){return pool.emplace_back(f,_id,idc),&pool.back();};//在内存池中创建节点
+    Node* newNode(int _id){return pool.emplace_back(_id,idc),&pool.back();};//在内存池中创建根节点
+    void dfs_build(Node* u){//第一次 DFS：统计子树大小，选出重儿子
+        int heavy = 0;
+        for(const int& vid:g[u->id]){
+            if(vid == u->faid)continue;//不走回头路
+            Node *vp = newNode(u,vid);//指向子节点的指针 v-pointer
             dfs_build(vp);//递归建树
-            u->siz += vp->siz;//统计子树大小 count the size of subtree
-            if(vp->siz > heavy)heavy = vp->siz,u->hs = vp;//选出重儿子 selection for heavy son
+            u->sz += vp->sz;//统计子树大小 count the size of subtree
+            if(vp->sz > heavy)heavy = vp->sz,u->hs = vp;//选出重儿子 selection for heavy son
         }
     }
-    void dfs_link(Node* u){
+    void dfs_link(Node* u){//第二次 DFS：分配 dfn，链接重链
         u->dfn = ++time;
-        if(u->s.empty())return;//叶子结点
-        u->hs->top = u->top;dfs_link(u->hs);//重儿子在重链上，top 继承本节点。重儿子优先 dfs，保证重链dfn连续。
-        for(const auto v:u->s){
+        if(u->ch.empty())return;//叶子结点
+        u->hs->top = u->top;dfs_link(u->hs);//重儿子在重链上，top 继承本节点。重儿子优先 dfs，保证重链 dfn 连续。
+        for(Node* v:u->ch){
             if(v == u->hs)continue;//重儿子已经走过
             v->top = v;dfs_link(v);//轻儿子的 top 节点是它自己
         }
     }
-    void build(){dfs_build(root= new Node(idc));}//建树
-    void link(){root->top = root;dfs_link(root);}//链接重链
-    HLDT(const vec2<> &g):g(g){build(),link();}
-    int lca(int _u,int _v){
-        auto u = idc[_u],v = idc[_v];
-        for(;u->top != v->top;u = u->top->fa)if(u->top->dept < v->top->dept)std::swap(u,v);
-        return u->dept > v->dept ? v->id : u->id;
+    HLDT(int _n,const vec2<int>& _g):n(_n),g(_g){//建树 + 链接重链
+        root = newNode(1);
+        dfs_build(root);
+        dfs_link(root);
+    }
+    //路径操作：func(l,r) 接收链区间的两端 dfn（保证 l<=r），返回该区间的聚合信息，query_on_path 按路径顺序合并
+    Info query_on_path(int uid,int vid,std::function<Info(int,int)> func){
+        Node *u = idc[uid],*v = idc[vid];
+        Info info;
+        for(;u->top != v->top;u = u->top->fa){//跳链，直到两节点在同一重链上
+            if(u->top->dept < v->top->dept)std::swap(u,v);
+            info = info + func(u->top->dfn,u->dfn);
+        }
+        if(u->dfn > v->dfn)std::swap(u,v);
+        return info + func(u->dfn,v->dfn);//最后一段在同一重链上
     }
 };
 ```
 
-请注意新建`root`时的 `id` 与图上的存储 `id` 对齐。
+请注意新建 `root` 时的 `id` 与图上的存储 `id` 对齐；`Info` 为「[线段树 SegmentTree](/viewer.html?file=docs/数据结构 DataStructure/线段树 SegmentTree/线段树 SegmentTree.md)」章节中定义的聚合信息类型。
 
 ## 树上操作
 
@@ -126,53 +146,40 @@ struct HLDT{//Heavy-Light Decomposed Tree
 
 ### 跳链操作
 
-所有路径操作都可以化为跳链操作，即在跳链过程中对链上的区间进行查询或修改。下面是一个示例代码模板，展示了如何在路径 (u, v) 上进行操作：
+所有路径操作都可以化为跳链操作，即在跳链过程中对链上的区间进行查询或修改。新版 `HLDT` 内置了 `query_on_path(uid, vid, func)`，它按照 **跳链 → 区间操作 → 合并** 的顺序完成路径操作：
+
+- `func(l, r)` 接收一段链区间的两个端点 dfn（保证 $l \le r$），返回该区间的聚合信息 `Info`；
+- `query_on_path` 将各段区间按路径顺序合并，最终返回整个路径的聚合信息。
 
 ```cpp
-void operate_on_path(int _u, int _v, std::function<void(HLDT&)> factor, HLDT &t) {
-    auto u = t.f_id[_u], v = t.f_id[_v];//编号到指针
-    
-    while (u->top != v->top) {
-        if (u->top->dep < v->top->dep) std::swap(u, v);
-        t.sgt.inrg = HLDT::SGT::Rge(u->top->dfn, u->dfn);
-        factor(t);
-        u = u->top->fa;
+//例：查询 (u, v) 路径上的聚合信息（如权值和、最大值）
+Info info = t.query_on_path(u, v, [&](int l,int r){
+    seg.ql = l,seg.qr = r;
+    return seg.query(seg.root);
+});
+```
+
+如果只想在跳链时执行修改（无需返回合并结果），也可以把跳链逻辑写成普通函数：
+
+```cpp
+void operate_on_path(int uid,int vid,std::function<void(int,int)> factor,HLDT &t) {
+    auto u = t.idc[uid], v = t.idc[vid];//编号到指针
+    for(;u->top != v->top;u = u->top->fa){//跳链，直到两节点在同一重链上
+        if(u->top->dept < v->top->dept)std::swap(u, v);
+        factor(u->top->dfn, u->dfn);
     }
-    
-    if (u != v) {
-        if (u->dep < v->dep) std::swap(u, v);
-        t.sgt.inrg = HLDT::SGT::Rge(v->dfn + 1, u->dfn);
-        factor(t);
-    }
+    if(u->dfn > v->dfn)std::swap(u, v);
+    factor(u->dfn, v->dfn);
 }
 ```
 
-或者写成这样。
+其中 `factor(l, r)` 是一个函数对象，表示对 dfn 区间 $[l,r]$ 的具体操作（例如区间加、区间求和等）。`factor` 要写成 lambda 表达式的形式，方便在调用时传入具体的操作逻辑。以路径赋值（配合线段树的懒标记）为例：
 
 ```cpp
-void operate(int _u,int _v,std::function<void()> factor){
-    auto u = f_id[_u],v = f_id[_v];
-    for(;u->top != v->top;u = u->top->fa){
-        if(u->top->dep < v->top->dep)std::swap(u,v);
-        sgt.inrg = SGT::Rge(u->top->dfn,u->dfn);
-        factor();
-    }
-    sgt.inrg = SGT::Rge(u->dfn,v->dfn);
-    factor();
-}
-```
-
-其中 `std::function<void(HLDT&)> factor` 是一个函数对象，表示在链上进行的具体操作（例如区间加、区间求和等）。。`factor` 要写成lambda表达式的形式，方便在调用时传入具体的操作逻辑。
-
-
-以路径加为例：
-
-```cpp
-void Add(int _u, int _v, int w, HLDT &t) {
-    operate_on_path(_u, _v, [w](HLDT &tree) {
-        tree.sgt.modify(tree.sgt.root, [w](auto node) { 
-            node->update_by(w); 
-        });
+void Set(int _u, int _v, int w, HLDT &t, SegTree &seg) {
+    operate_on_path(_u, _v, [&](int l,int r) {
+        seg.ql = l,seg.qr = r;
+        seg.update(seg.root,Tag{w,true});//把 dfn 区间 [l,r] 赋值为 w
     }, t);
 }
 ```
@@ -254,3 +261,22 @@ void Add(int _u, int _v, int w, HLDT &t) {
         在进行区间查询时，**上行方向**（即 u->LCA）需要翻转（因为 dfn 从小到大是从上往下走的），而**下行方向**（即 LCA->v）无需翻转（因为 dfn 从小到大也是从上往下走的）。因此在合并信息时，上行方向需要翻转 msg 的 a、b、c、d 的位置，而下行方向则不需要。
 
 [**参考代码**](/viewer.html?file=Code/P3976.cpp)
+
+### [Luogu P3313 [SDOI2014] 旅行](https://www.luogu.com.cn/problem/P3313)
+
+本题是**动态开点线段树 + 树链剖分**的综合应用。树上的每个城市有两个属性：宗教（颜色）与评级（点权），操作有四种：
+
+- `CC x c`：城市 x 的宗教改为 c
+- `CW x w`：城市 x 的评级改为 w
+- `QS x y`：询问 x 到 y 路径上，宗教与 x 相同的城市的评级**之和**
+- `QM x y`：询问 x 到 y 路径上，宗教与 x 相同的城市的评级**最大值**
+
+如果只建一棵线段树，无法区分不同宗教的贡献。因此为**每一种宗教**各建一棵**动态开点**线段树，维护该宗教下各城市（按 dfn 映射）的评级之和与最大值：
+
+- 修改宗教 `CC`：在旧宗教树上把该 dfn 位置赋为 0（删除），在新宗教树上赋为评级（插入）；
+- 修改评级 `CW`：在该城市所属宗教的树上做单点赋值；
+- 路径查询 `QS/QM`：在宗教 `city[x].col` 对应的树上，用 `query_on_path` 对路径分解出的各 dfn 区间做查询并合并（题目保证 $x,y$ 宗教相同）。
+
+每棵线段树都只在实际访问到时才开点，所有树上的节点总数至多为 $O(n \log n)$，空间可以接受。同时，`Info` 同时维护区间和与最大值，正好对应 `QS` 与 `QM` 两种查询。
+
+[**参考代码**](/viewer.html?file=Code/P3313.cpp)

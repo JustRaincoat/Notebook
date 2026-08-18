@@ -93,358 +93,136 @@
 
 详见 [OI Wiki](https://oi-wiki.org/ds/seg/)
 
-## code
+## 代码模板 —— Tag + Info + SegTree 解耦设计
 
-线段树的运用很多，为了增加线段树的可扩展性，使用 OPP 的思想来处理不同的模块。代码分段给出……
+为了最大化可扩展性，将线段树拆分为三个独立模块：
 
-### 区间
+- **`Info`（信息）**：节点区间上的聚合信息（如区间和、最大值）。通过重载 `operator+` 定义**合并规则**（必须满足结合律）；通过 `apply(Tag)` 定义**懒标记作用到信息**的规则。
+- **`Tag`（懒标记）**：暂存的修改。通过 `overlay(const Tag&)` 定义**标记叠加**规则（多个标记先后作用于同一节点时如何合并）。
+- **`SegTree`（框架）**：只负责区间划分、`pushup`/`pushdown` 调度与动态开点，不关心维护的具体信息。更换题目时**只需重写 `Info` 与 `Tag`**，框架代码一字不动。
 
-我们知道线段树每一个节点都表示一个区间。
+节点使用 **`std::deque<Node> pool` 内存池 + 指针** 动态开点。`deque` 的 `push_back` 不会使已有元素的指针失效，因此可以安全保存 `Node*`；相比 `new` 分配，避免了内存泄漏和大量小对象分配的开销。修改/查询区间通过成员变量 `ql, qr` 传入。
 
-使用了重载运算符完成四个操作：
-1. 读入
-2. 合并
-3. 包含
-4. 分割
+### Tag（以区间赋值为例）
 
-```cpp   
-struct Rge{
-    int l,r,mid,len;
-    Rge():l(0),r(0),mid(0),len(0){};
-    Rge(int l_,int r_):l(l_),r(r_),mid((l_+r_)>>1),len(r_-l_+1){};
-    friend istream& operator >> (istream& stream,Rge& rg){
-        int l_,r_;
-        stream>>l_>>r_;
-        rg = Rge(l_,r_);//使用初始化函数，初始化所有可能用到的变量
-        return stream;
-    }
-    friend Rge operator + (Rge a, Rge b) {
-        return Rge(a.l, b.r);
-    }
-    friend bool operator <= (Rge a,Rge b){//判断区间的包含关系
-        return b.l <= a.l && a.r <= b.r;
-    }
-    friend pair<Rge,Rge> operator / (Rge x,const int p){//分成两个子区间
-        return make_pair(Rge(x.l,x.mid),Rge(x.mid+1,x.r));
-    }
+```cpp
+struct Tag{//懒标记：区间赋值
+    int set = 0;bool setTag = false;//赋的值 & 是否有赋值标记
+    void overlay(const Tag& t){set = t.set,setTag = true;}//标记叠加：后者覆盖前者
 };
 ```
 
-## 信息
+### Info（以区间和 + 区间最大值为例）
 
-节点存储的内容
-
-1. 管理的区间
-2. 管理的信息对象（参见后文）
-3. 管理的方式方法
-4. 管理信息的初始化
-
-```cpp   
-struct Msg {
-    Rge rg;
-    struct Sum {
-        int res, tag;
-        friend Sum operator + (Sum a, Sum b) {
-            return Sum{a.res + b.res, 0}; //区间合并时tag一定为0
-        }
-    } sum;//以区间和为例
-    friend Msg operator + (Msg a, Msg b) {
-        return Msg{a.rg + b.rg, a.sum + b.sum};
-    }
-    void update(int val){
-        sum.res += val * rg.len;
-        sum.tag += val;
-    }
-    void init(int val){
-        sum.res = val;
-    }
+```cpp
+struct Info{//节点信息：区间和 + 区间最大值
+    int sum = 0,max = 0;
+    Info operator+(Info x) const {return {sum + x.sum,std::max(max,x.max)};}//合并（满足结合律）
+    void apply(Tag t){sum = t.set,max = t.set;}//懒标记作用到信息
 };
 ```
 
-## 节点
+### SegTree 框架
 
-记录左儿子和右儿子的编号。
-
-```cpp   
-struct Node {
-    int ls, rs;
-    Msg msg;
-} node[maxn];
-```
-
-关于节点的创建与储存：
-
-不使用 **传统的存储** $4$ 倍空间，在空间上能省则省。
-
-不使用 **内存开销巨大且迭代器扩容后损坏** 的 ***vector*** 存储。
-
-朴素而简单的 堆+数组 ，把空间复杂度降到 $O(n)$ 。
-
-
-## 线段树基本操作
-
-分为两类：
-
-1. 修改类 ( *modify - mdf* )
-2. 查询类 ( *quary - qry* )
-
-这两类代码有着类似的运行逻辑。
-
-```cpp   
-function f(int k,/*other arguments*/){
-    if(node[k].msg.rg <= inrg){//在本区间内
-        /*Do sth.*/
-        return;
-    }
-    pushdown(k);//下传标记 & 新建节点
-    if(inrg.l <= node[k].msg.rg.mid){//处理左侧区间
-        /*Do sth.*/
-        f(node[k].ls);//递归
-    }
-    if(inrg.r > node[k].msg.rg.mid){//处理右侧区间
-        /*Do sth.*/
-        f(node[k].rs);//递归
-    }
-    return;
-}
-```
-
-### MODIFY
-
-```cpp   
-void mdf(int k,int val){
-    if(node[k].msg.rg <= inrg){
-        node[k].msg.update(val);
-        return;
-    }
-    pushdown(k);
-    if(inrg.l <= node[k].msg.rg.mid)mdf(node[k].ls,val);
-    if(inrg.r > node[k].msg.rg.mid)mdf(node[k].rs,val);
-    node[k].msg = node[node[k].ls].msg + node[node[k].rs].msg;
-}
-```
-
-### QUARY
-
-```cpp   
-int qry(int k){
-    if(node[k].msg.rg <= inrg){
-        return node[k].msg.sum.res;
-    }
-    pushdown(k);
-    int ret = 0;
-    if(inrg.l <= node[k].msg.rg.mid)ret += qry(node[k].ls);
-    if(inrg.r > node[k].msg.rg.mid)ret += qry(node[k].rs);
-    return ret;
-}
-```
-
-
-## 例题
-
-[P3373 线段树1](https://www.luogu.com.cn/problem/P3373)
-
-```cpp   
-#include<bits/stdc++.h>
-#define int long long
-using namespace std;
-constexpr int maxn = 1e6+7;
-int n,m,opt,val,root=1;
-namespace SGT {
-    int cnt = 1,a[maxn];
-    struct Rge {
-        int l, r, mid, len;
-        Rge(): l(0), r(0), mid(0), len(0) {};
-        Rge(int l_, int r_): l(l_), r(r_), mid((l_ + r_) >> 1), len(r_ - l_ + 1) {};
-        friend istream& operator >> (istream& stream, Rge& rg) {
-            int l_, r_;
-            stream >> l_ >> r_;
-            rg = Rge(l_, r_);
-            return stream;
-        }
-        friend Rge operator + (Rge a, Rge b) {
-            return Rge(a.l, b.r);
-        }
-        friend bool operator <= (Rge a, Rge b) {
-            return b.l <= a.l && a.r <= b.r;
-        }
-        friend pair<Rge, Rge> operator / (Rge x, const int p) {
-            return make_pair(Rge(x.l, x.mid), Rge(x.mid + 1, x.r));
-        }
-    }inrg;
-    struct Msg {
-        Rge rg;
-        struct Sum {
-            int res, tag;
-            friend Sum operator + (Sum a, Sum b) {
-                return Sum{a.res + b.res, 0}; //区间合并时tag一定为0
-            }
-        } sum;
-        friend Msg operator + (Msg a, Msg b) {
-            return Msg{a.rg + b.rg, a.sum + b.sum};
-        }
-        void update(int val){
-            sum.res += val * rg.len;
-            sum.tag += val;
-        }
+```cpp
+struct SegTree{//动态开点线段树
+    struct Node{
+        const int l,r;//本节点管理的区间
+        Tag tag;
+        Info info;
+        Node *ls = nullptr,*rs = nullptr;
+        Node(int _l,int _r):l(_l),r(_r),tag{0,false},info{0,0}{};
     };
-    struct Node {
-        int ls, rs;
-        Msg msg;
-    } node[maxn];
-    void pushdown(int k){
-        if(node[k].msg.sum.tag){
-            node[node[k].ls].msg.update(node[k].msg.sum.tag);
-            node[node[k].rs].msg.update(node[k].msg.sum.tag);
-            node[k].msg.sum.tag = 0;
+    const int n;
+    int ql,qr;//本次操作的区间
+    std::deque<Node> pool;//内存池
+    Node* newNode(const int l,const int r){return pool.emplace_back(l,r),&pool.back();};
+    Node *root;
+    void apply(Node* p,const Tag TAG){//将懒标记作用到节点
+        p->info.apply(TAG);
+        p->tag.overlay(TAG);
+    }
+    void pushup(Node *p){p->info = (p->ls?p->ls->info:Info{0,0}) + (p->rs?p->rs->info:Info{0,0});}
+    void pushdown(Node *p){//下传懒标记（必要时新建子节点）
+        if(p->tag.setTag){
+            if(!p->ls)p->ls = (pool.emplace_back(p->l, (p->l + p->r)/2),&pool.back());
+            if(!p->rs)p->rs = (pool.emplace_back((p->l + p->r)/2+1,p->r),&pool.back());
+            apply(p->ls,p->tag);
+            apply(p->rs,p->tag);
+            p->tag = Tag();
         }
     }
-    void mdf(int k,int val){
-        if(node[k].msg.rg <= inrg){
-            node[k].msg.update(val);
-            return;
-        }
-        pushdown(k);
-        if(inrg.l <= node[k].msg.rg.mid)mdf(node[k].ls,val);
-        if(inrg.r > node[k].msg.rg.mid)mdf(node[k].rs,val);
-        node[k].msg = node[node[k].ls].msg + node[node[k].rs].msg;
+    SegTree(const int _n):n(_n),root(newNode(1,n)){};
+    void update(Node* u,const Tag t){//区间修改
+        if(ql <= u->l && u->r <= qr){apply(u,t);return;}
+        pushdown(u);
+        int m = (u->l + u->r)/2;
+        if(ql <= m)update(u->ls = (u->ls?u->ls:newNode(u->l,m)),t);
+        if(qr >  m)update(u->rs = (u->rs?u->rs:newNode(m+1,u->r)),t);
+        pushup(u);
     }
-    int qry(int k){
-        if(node[k].msg.rg <= inrg){
-            return node[k].msg.sum.res;
-        }
-        pushdown(k);
-        int ret = 0;
-        if(inrg.l <= node[k].msg.rg.mid)ret += qry(node[k].ls);
-        if(inrg.r > node[k].msg.rg.mid)ret += qry(node[k].rs);
-        return ret;
+    Info query(Node* u){//区间查询
+        if(ql <= u->l && u->r <= qr)return u->info;
+        pushdown(u);
+        int m = (u->l + u->r)/2;
+        if(qr <= m)return u->ls?query(u->ls):Info{};
+        if(ql >  m)return u->rs?query(u->rs):Info{};
+        return (u->ls?query(u->ls):Info{}) + (u->rs?query(u->rs):Info{});
     }
-    void build(int k,Rge rg){
-        node[k].msg.rg = rg;
-        if(rg.len == 1){
-            node[k].msg.sum.res = a[rg.l];
-            return;
-        }
-        auto div = rg/2;
-        node[k].ls = ++cnt;
-        build(node[k].ls,div.first);
-        node[k].rs = ++cnt;
-        build(node[k].rs,div.second);
-        node[k].msg = node[node[k].ls].msg + node[node[k].rs].msg;
-    }
-}
-signed main() {
-    ios::sync_with_stdio(0),cin.tie(0),cout.tie(0);
-    cin>>n>>m;
-    for(int i=1;i<=n;i++)cin>>SGT::a[i];
-    SGT::build(root,SGT::Rge(1,n));
-    while(m--){
-        cin>>opt>>SGT::inrg;
-        if(opt==1){
-            cin>>val;
-            SGT::mdf(root,val);
-        }else cout<<SGT::qry(root)<<'\n';
-    }
-    return 0;
-}
+};
 ```
 
-## 指针优化 - 动态开点
+### 如何扩展：只换 Tag / Info
 
-### 写在前面
+以「区间乘 + 区间加 + 区间求和」为例（P3373），`SegTree` 框架不变，仅把两个结构体换成：
 
-首先要了解动态开点线段树的使用情景
+```cpp
+struct Tag{//懒标记：先乘 mul 再加 add
+    int mul = 1,add = 0;
+    void overlay(const Tag& t){//标记叠加：本标记先作用，t 后作用
+        add = (add*t.mul + t.add)%p;
+        mul = mul*t.mul%p;
+    }
+};
+struct Info{
+    int sum = 0;
+    Info operator+(Info x) const {return {(sum + x.sum)%p};}
+    void apply(Tag t,int len){sum = (sum*t.mul + t.add*len)%p;}//需要区间长度时把 len 一并传入
+};
+```
+
+完整代码见例题 [P3373](#例题)。
+
+### 动态开点的使用情景
 
 | 情况 | 处理方法 | 说明 |
 | :--- | :--- | :--- |
 | **初始全为0** | **最简单** | 不存在的节点直接返回0，逻辑自然。 |
-| **初始全为同一个值 `val`** | **修改 `pushdown` 逻辑** | 在创建新节点时，将其值初始化为 `val * rg.len`，而不是0。 |
+| **初始全为同一个值 `val`** | **修改 `pushdown` 逻辑** | 在创建新节点时，将其值初始化为 `val * len`，而不是0。 |
 | **初始为一个（稀疏）数组** | **视情况通过 `update` 初始化** | 只为那些非默认值的元素创建节点。如果数组密集，则不适合用动态开点。 |
 | **有值节点极多** | **不建议使用** | 退化成普通线段树 |
 
-因为上述的板子很方便了，只需要稍作修改即可
+!!! tip 与树链剖分配合
+    当 `Info` 同时维护多个量（如区间和、区间最大值）时，可以让树链剖分的 `query_on_path` 直接返回 `Info`，从而一次跳链同时完成多种聚合查询。详见「[重链剖分 HLD](/viewer.html?file=docs/图论 Graph/树 Tree/重链剖分 HLD/重链剖分 HLD.md)」中的 [P3313 [SDOI2014] 旅行](https://www.luogu.com.cn/problem/P3313) 例题。
 
-### 新增
+## 例题
 
-```cpp   
-int create(Rge rg){
-    ++cnt;
-    node[cnt].msg.rg = rg;
-    return cnt;
-}
-```
+### [P3373 【模板】线段树 2](https://www.luogu.com.cn/problem/P3373)
 
-### 修改
+区间乘、区间加、区间求和。`Tag` 需同时记录乘与加两种懒标记，`overlay` 时注意叠加顺序（先乘后加）。
 
-1. 新增检查和新建节点的模块
+[**参考代码**](/viewer.html?file=Code/P3373.cpp)
 
-```cpp
-void pushdown(int k){
-    auto div = node[k].msg.rg/2;
-    if(!node[k].ls)node[k].ls = create(div.first);
-    if(!node[k].rs)node[k].rs = create(div.second);
-    if(node[k].msg.sum.tag){
-        node[node[k].ls].msg.update(node[k].msg.sum.tag);
-        node[node[k].rs].msg.update(node[k].msg.sum.tag);
-        node[k].msg.sum.tag = 0;
-    }
-}
-```
-
-2. 删去无用的 `build` 函数。
-
-## [Problem](https://www.luogu.com.cn/problem/P13825)
+### [P13825 【模板】线段树 1.5](https://www.luogu.com.cn/problem/P13825)
 
 1. [**Code**](/viewer.html?file=Code/P13825.old.cpp)
     使用数组写法。
 2. [**Code**](/viewer.html?file=Code/P13825.cpp)
     使用指针优化写法。在保留原有代码的极高扩展性的情况下使代码时空效率更高。
 
-## 泛型优化 - 基于 Lambda 表达式的一树多用
-
-在线段树的题目中，我们常常遇见维护信息多，修改操作复杂的问题。如果对每个操作单独写一个函数，代码会变得冗长且难以维护。基于 Lambda 表达式的一树多用的思想，可以让我们在保持线段树核心结构不变的情况下，通过传入不同的 Lambda 表达式来实现不同的修改和查询操作，从而大大提高代码的复用性和可维护性。
-
-```cpp
-void modify(Node* u,const std::function<void(Node*)> &factor){
-    if(u->rg <= inrg){
-        factor(u);
-        return;
-    }
-    u->pushdown();
-    if(inrg.l <= u->rg.mid)modify(u->ls,factor);
-    if(inrg.r > u->rg.mid)modify(u->rs,factor);
-    u->pushup();
-}
-template<typename T>
-T query(Node* u,const std::function<T(Node*)> &base,const std::function<T(T,T)> &merge){
-    if(u->rg <= inrg)return base(u);
-    u->pushdown();
-    if(inrg.r <= u->rg.mid)return query(u->ls,base,merge);
-    if(inrg.l>=u->rg.mid+1)return query(u->rs,base,merge);
-    return merge(query(u->ls,base,merge),query(u->rs,base,merge));
-}
-```
-
-这样就能使多个操作共用同一套代码和逻辑，在使用时：
-
-```cpp
-Tree.sgt.modify(
-    Tree.sgt.root,
-    [](SGT::Node* u){u->upsum(1);}//对应修改的操作（以区间加1为例）
-);
-```
-```cpp
-Tree.sgt.query<int>(//较为复杂时直接返回存储对应信息的结构体，如最大连续子段和等
-    Tree.sgt.root,
-    [](SGT::Node* u){return u->sum.num;},//base情况，返回单个节点的查询值
-    [](int a,int b){return a+b;}//处理左右节点的合并，可以参考pushup的逻辑
-);
-```
-
-~~写树剖写的~~
-
 ## 应用
 
 !!! tip 踩坑记录
     1. 记得判断输入区间是否合法，若没有声明 `l<r`，则默认进行交换操作。
     2. 不要滥用动态开点，新增节点会带来更多的时间复杂度。
+    3. `Tag` 的 `overlay` 叠加顺序不可交换时（如先乘后加），务必写清楚「哪个标记先作用」。

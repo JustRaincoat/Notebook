@@ -2,6 +2,7 @@ title: 数据结构
 nav:
   - 并查集 DSU
   - 线段树 SegmentTree
+  - 树状数组 BIT
   - 稀疏表 SparseTable
   - 字典树 TrieTree
   - 矩阵 Matrix

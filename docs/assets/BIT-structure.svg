@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="560" viewBox="0 0 880 560" font-family="'Segoe UI',Arial,sans-serif">
+  <defs>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#ea580c"/>
+    </marker>
+  </defs>
+
+  <!-- 标题 -->
+  <text x="440" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#0f172a">树状数组（BIT）结构示意 — n = 8</text>
+  <text x="440" y="60" text-anchor="middle" font-size="14" fill="#475569">c[i] 管辖区间 [i − lowbit(i) + 1, i]，其中 lowbit(x) = x &amp; (−x)</text>
+
+  <!-- 图例 -->
+  <line x1="180" y1="86" x2="230" y2="86" stroke="#2563eb" stroke-width="3"/>
+  <path d="M230,86 L222,82 L222,90 Z" fill="#2563eb"/>
+  <text x="240" y="91" font-size="14" fill="#2563eb">查询路径 sum(7)：7 → 6 → 4</text>
+  <line x1="500" y1="86" x2="550" y2="86" stroke="#ea580c" stroke-width="3"/>
+  <path d="M550,86 L542,82 L542,90 Z" fill="#ea580c"/>
+  <text x="560" y="91" font-size="14" fill="#ea580c">更新路径 add(5)：5 → 6 → 8</text>
+
+  <!-- c8 覆盖 [1,8] -->
+  <rect x="60" y="150" width="750" height="50" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="75" y="172" font-size="15" font-weight="bold" fill="#0f172a">c8</text>
+  <text x="75" y="192" font-size="12" fill="#64748b">管辖 [1, 8]，lowbit(8) = 8</text>
+
+  <!-- c4 覆盖 [1,4] -->
+  <rect x="60" y="230" width="370" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="75" y="252" font-size="15" font-weight="bold" fill="#1d4ed8">c4</text>
+  <text x="75" y="272" font-size="12" fill="#3b82f6">管辖 [1, 4]，lowbit(4) = 4</text>
+
+  <!-- c2 覆盖 [1,2] -->
+  <rect x="60" y="310" width="180" height="50" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="75" y="332" font-size="15" font-weight="bold" fill="#0f172a">c2</text>
+  <text x="75" y="352" font-size="12" fill="#64748b">[1, 2]</text>
+
+  <!-- c6 覆盖 [5,6] -->
+  <rect x="440" y="310" width="180" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="455" y="332" font-size="15" font-weight="bold" fill="#1d4ed8">c6</text>
+  <text x="455" y="352" font-size="12" fill="#3b82f6">管辖 [5, 6]，lowbit(6) = 2</text>
+
+  <!-- c1 -->
+  <rect x="60" y="390" width="85" height="50" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="75" y="412" font-size="15" font-weight="bold" fill="#0f172a">c1</text>
+  <text x="75" y="432" font-size="12" fill="#64748b">[1, 1]</text>
+
+  <!-- c3 -->
+  <rect x="250" y="390" width="85" height="50" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="265" y="412" font-size="15" font-weight="bold" fill="#0f172a">c3</text>
+  <text x="265" y="432" font-size="12" fill="#64748b">[3, 3]</text>
+
+  <!-- c5 -->
+  <rect x="440" y="390" width="85" height="50" rx="6" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+  <text x="455" y="412" font-size="15" font-weight="bold" fill="#c2410c">c5</text>
+  <text x="455" y="432" font-size="12" fill="#ea580c">[5, 5]</text>
+
+  <!-- c7 -->
+  <rect x="630" y="390" width="85" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="645" y="412" font-size="15" font-weight="bold" fill="#1d4ed8">c7</text>
+  <text x="645" y="432" font-size="12" fill="#3b82f6">[7, 7]</text>
+
+  <!-- 查询路径箭头 sum(7): c7 -> c6 -> c4 -->
+  <line x1="672" y1="386" x2="582" y2="316" stroke="#2563eb" stroke-width="3" marker-end="url(#arrowBlue)"/>
+  <line x1="572" y1="306" x2="400" y2="236" stroke="#2563eb" stroke-width="3" marker-end="url(#arrowBlue)"/>
+
+  <!-- 更新路径箭头 add(5): c5 -> c6 -> c8 -->
+  <line x1="488" y1="386" x2="536" y2="316" stroke="#ea580c" stroke-width="3" marker-end="url(#arrowOrange)"/>
+  <line x1="556" y1="306" x2="446" y2="156" stroke="#ea580c" stroke-width="3" marker-end="url(#arrowOrange)"/>
+
+  <!-- 原数组 a[1..8] -->
+  <g font-size="15" font-weight="bold" fill="#0f172a">
+    <rect x="60"  y="470" width="85" height="40" rx="6" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+    <rect x="155" y="470" width="85" height="40" rx="6" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+    <rect x="250" y="470" width="85" height="40" rx="6" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+    <rect x="345" y="470" width="85" height="40" rx="6" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+    <rect x="440" y="470" width="85" height="40" rx="6" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+    <rect x="535" y="470" width="85" height="40" rx="6" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+    <rect x="630" y="470" width="85" height="40" rx="6" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+    <rect x="725" y="470" width="85" height="40" rx="6" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+    <text x="102" y="496" text-anchor="middle">a1</text>
+    <text x="197" y="496" text-anchor="middle">a2</text>
+    <text x="292" y="496" text-anchor="middle">a3</text>
+    <text x="387" y="496" text-anchor="middle">a4</text>
+    <text x="482" y="496" text-anchor="middle">a5</text>
+    <text x="577" y="496" text-anchor="middle">a6</text>
+    <text x="672" y="496" text-anchor="middle">a7</text>
+    <text x="767" y="496" text-anchor="middle">a8</text>
+  </g>
+
+  <!-- 下标 / 二进制 / lowbit 对照 -->
+  <g font-size="13" text-anchor="middle">
+    <g fill="#0f172a" font-weight="bold">
+      <text x="102" y="528">1</text><text x="197" y="528">2</text><text x="292" y="528">3</text><text x="387" y="528">4</text>
+      <text x="482" y="528">5</text><text x="577" y="528">6</text><text x="672" y="528">7</text><text x="767" y="528">8</text>
+    </g>
+    <g fill="#64748b">
+      <text x="102" y="546">0001</text><text x="197" y="546">0010</text><text x="292" y="546">0011</text><text x="387" y="546">0100</text>
+      <text x="482" y="546">0101</text><text x="577" y="546">0110</text><text x="672" y="546">0111</text><text x="767" y="546">1000</text>
+    </g>
+    <g fill="#16a34a" font-weight="bold">
+      <text x="102" y="562">lowbit = 1</text><text x="197" y="562">2</text><text x="292" y="562">1</text><text x="387" y="562">4</text>
+      <text x="482" y="562">1</text><text x="577" y="562">2</text><text x="672" y="562">1</text><text x="767" y="562">8</text>
+    </g>
+  </g>
+</svg>
